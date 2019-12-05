@@ -23,19 +23,21 @@
         
         <h3>Ketä seuraan</h3>  
         <ol>
-            <li th:each="profile : ${whoIamFollowing}">
-                <span th:text="${profile.followedAlias}">alias</span>:
-                <span th:text="${profile.followedName}">nimi</span>
+            <li th:each="following : ${whoIamFollowing}">
+                <span th:text="${following.followedAlias}">alias</span>:
+                <span th:text="${following.followedName}">nimi</span>
                 
             </li>
         </ol>
         
         <h3>Ketkä seuraavat minua</h3>  
         <ol>
-            <li th:each="profile : ${whoAreFollowingMe}">
-                <span th:text="${profile.followerAlias}">alias</span>:
-                <span th:text="${profile.followerName}">nimi</span>
-                
+            <li th:each="following : ${whoAreFollowingMe}">
+                <span th:text="${following.followerAlias}">alias</span>:
+                <span th:text="${following.followerName}">nimi</span>
+                <form th:action="@{/ownprofile/{stopfollowerprofile}/stopfollower(stopfollowerprofile=${following.followerAlias})}" method="POST">
+                    <input type="submit" value="Torju seuraaminen"/>
+                </form>
             </li>
         </ol>
         

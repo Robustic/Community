@@ -1,0 +1,37 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello world</title>
+    </head>
+    <body>
+        <h1>Etsi profiileita</h1>
+        
+        <h3>Hae</h3>
+        <form method="POST" th:action="@{/find}" action="/find">
+            <input type="text" name="findtext"/>
+            <input type="submit" value="Etsi"/>
+        </form>
+        
+        <h3>Löydetyt profiilit</h3>  
+        <ol>
+            <li th:each="profile : ${findedProfiles}">
+                <span th:text="${profile.name}">name</span>:
+                <span th:text="${profile.alias}">alias</span>
+                <div th:unless="${#lists.contains(followedProfiles, profile)}">
+                    <form th:action="@{/find/{profiletofollow}/tofollow(profiletofollow=${profile.alias})}" method="POST">
+                        <input type="submit" value="Seuraa"/>
+                    </form>
+                </div>
+                <div th:if="${#lists.contains(followedProfiles, profile)}">
+                    <form th:action="@{/find/{profiletoleavefollowing}/leavefollowing(profiletoleavefollowing=${profile.alias})}" method="POST">
+                        <input type="submit" value="Peru seuraaminen"/>
+                    </form>
+                </div>
+            </li>
+        </ol>
+        
+        <p><a th:href="@{/ownprofile}">Oma profiili</a></p>
+        <p><a th:href="@{/logout}">Logout</a></p>
+    </body>
+</html>

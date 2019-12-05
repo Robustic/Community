@@ -1,0 +1,45 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello world</title>
+    </head>
+    <body>
+        <h1 th:text="${ownprofileheader}">Header</h1>
+        
+        <h3>Viestini</h3>        
+        <ol>
+            <li th:each="message : ${ownprofilemessages}">
+                <span th:text="${message.alias}">alias</span>:
+                <span th:text="${message.text}">text</span>
+                
+            </li>
+        </ol>
+
+        <form method="POST" th:action="@{/ownprofile}" action="/ownprofile">
+            <input type="text" name="text"/>
+            <input type="submit" value="Lähetä uusi viesti"/>
+        </form>
+        
+        <h3>Ketä seuraan</h3>  
+        <ol>
+            <li th:each="profile : ${whoIamFollowing}">
+                <span th:text="${profile.followedAlias}">alias</span>:
+                <span th:text="${profile.followedName}">nimi</span>
+                
+            </li>
+        </ol>
+        
+        <h3>Ketkä seuraavat minua</h3>  
+        <ol>
+            <li th:each="profile : ${whoAreFollowingMe}">
+                <span th:text="${profile.followerAlias}">alias</span>:
+                <span th:text="${profile.followerName}">nimi</span>
+                
+            </li>
+        </ol>
+        
+        <p><a th:href="@{/find}">Etsi profiileita</a></p>
+        <p><a th:href="@{/logout}">Logout</a></p>
+    </body>
+</html>

@@ -1,0 +1,33 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head>
+        <meta charset="UTF-8" />
+        <title>Hello world</title>
+    </head>
+    <body>
+        <h1>Tervetuloa Maju verkottoitumissovellukseen</h1>
+        <p>Mujan käyttö vaatii rekisteröitymisen. Rekisteröitymistä varten voit antaa tietosi alle. 
+            Jos olet jo rekisteröitynyt, voit kirjautua ohessa olevan linkin kautta.</p>
+        <form method="POST" th:action="@{/maju}">
+            <p>
+                Käyttäjätunnus
+                <input type="text" name="username"/>
+            </p>
+            <p>
+                Salasana
+                <input type="password" name="password"/>
+            </p>
+            <p>
+                Nimi
+                <input type="text" name="name"/>
+            </p>
+            <p>
+                Kaikille näkyvä alias-nimi
+                <input type="text" name="alias"/>
+            </p>
+            <input type="submit" value="Lähetä uusi käyttäjätunnus."/>
+        </form>
+        <p th:text="${info}">Info</p>
+        <p><a th:href="@{/ownprofile}">Login</a></p>
+    </body>
+</html>

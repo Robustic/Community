@@ -1,0 +1,4 @@
+.tmcproject.yml
+target/
+src/main/java/projekti/InitializeDatabase.java
+

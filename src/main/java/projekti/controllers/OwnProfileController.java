@@ -47,7 +47,7 @@ public class OwnProfileController {
         
         model.addAttribute("whoIamFollowing", dataPacketService.convertFollowerListToDataPackets(followingRepository.findByFollower(profileUsedNow)));
         model.addAttribute("whoAreFollowingMe", dataPacketService.convertFollowedListToDataPackets(followingRepository.findByFollowed(profileUsedNow)));
-        model.addAttribute("blockeds", dataPacketService.convertBlockedListToDataPackets(blockedRepository.findByBlocker(profileUsedNow)));
+        model.addAttribute("blockeds", dataPacketService.convertBlockedListToDataPackets(blockedRepository.findByBlocker(profileUsedNow)));        
         return "ownprofile";
     }
     

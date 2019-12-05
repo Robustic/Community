@@ -15,9 +15,11 @@ import projekti.repositories.FollowingRepository;
 import projekti.repositories.ProfileRepository;
 import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
+import projekti.entities.Blocked;
 import projekti.entities.Following;
 import projekti.entities.Profile;
 import projekti.repositories.BlockedRepository;
+import projekti.services.DataPacketServices;
 import projekti.services.ProfileService;
 
 @Controller
@@ -34,6 +36,9 @@ public class FindController {
 
     @Autowired
     private BlockedRepository blockedRepository;
+    
+    @Autowired
+    private DataPacketServices dataPacketService;
 
     String textToFind = "";
 
@@ -48,6 +53,13 @@ public class FindController {
             follewedProfiles.add(following.getFollowed());
         }
         model.addAttribute("followedProfiles", follewedProfiles);
+        List<Blocked> blockeds = blockedRepository.findByBlocked(currentProfile);
+        List<Profile> blockerProfiles = new ArrayList<>();
+        for (Blocked blocked : blockeds) {
+            blockerProfiles.add(blocked.getBlocker());
+        }
+        
+        model.addAttribute("blockedMe", blockerProfiles);
         return "find";
     }
 

@@ -41,4 +41,13 @@ public class DataPacketServices {
         }
         return blockedDataPackets;
     }
+    
+    public List<DataPacket> convertBlockerListToDataPackets(List<Blocked> blockerList) {
+        List<DataPacket> blockedDataPackets = new ArrayList<>();
+        for (Blocked blocked : blockerList) {            
+            DataPacket dataPacket = convertProfileAndLocalDateTimeToDataPacket(blocked.getBlocker(), blocked.getLocalDateTime());
+            blockedDataPackets.add(dataPacket);
+        }
+        return blockedDataPackets;
+    }
 }

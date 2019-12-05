@@ -31,6 +31,12 @@ public class Profile extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "followed")
     private List<Following> whoAreFollowingMe; 
     
+    @OneToMany(mappedBy = "blocker")
+    private List<Blocked> whoIamBlocked;
+    
+    @OneToMany(mappedBy = "blocked")
+    private List<Blocked> whoAreBlockedMe;
+    
     public Profile(String name, String alias) {
         this.name = name;
         this.alias = alias;

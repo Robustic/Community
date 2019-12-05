@@ -1,5 +1,6 @@
 package projekti.controllers;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,21 +17,26 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.web.bind.annotation.PathVariable;
 import projekti.entities.Following;
 import projekti.entities.Profile;
+import projekti.repositories.BlockedRepository;
 import projekti.services.ProfileService;
 
 @Controller
 public class FindController {
+
     @Autowired
     private ProfileRepository profileRepository;
-    
+
     @Autowired
     private ProfileService profileService;
-    
+
     @Autowired
     private FollowingRepository followingRepository;
-    
+
+    @Autowired
+    private BlockedRepository blockedRepository;
+
     String textToFind = "";
-    
+
     @GetMapping("/find")
     public String find(Model model) {
         Profile currentProfile = profileService.findProfileForCurrentUser();
@@ -44,39 +50,36 @@ public class FindController {
         model.addAttribute("followedProfiles", follewedProfiles);
         return "find";
     }
-    
+
     @PostMapping("/find")
     public String add(@RequestParam String findtext) {
         if (findtext != null) {
-            textToFind = findtext.trim();            
-        }        
+            textToFind = findtext.trim();
+        }
         return "redirect:/find";
     }
-    
+
     @PostMapping("/find/{profiletofollow}/tofollow")
     public String addFollowed(@PathVariable String profiletofollow) {
-        Following newFollowing = new Following();        
-      
         Profile currentProfile = profileService.findProfileForCurrentUser();
-        newFollowing.setFollower(currentProfile);
-        newFollowing.setFollowerName(currentProfile.getName());
-        newFollowing.setFollowerAlias(currentProfile.getAlias());
-        
         Profile profileToFollow = profileRepository.findByAlias(profiletofollow);
-        newFollowing.setFollowed(profileToFollow);
-        newFollowing.setFollowedName(profileToFollow.getName());
-        newFollowing.setFollowedAlias(profileToFollow.getAlias());
-        
-        followingRepository.save(newFollowing);
+        if (blockedRepository.findByBlockerAndBlocked(profileToFollow, currentProfile) == null) {
+            Following newFollowing = new Following();
+            newFollowing.setFollower(currentProfile);
+            newFollowing.setFollowed(profileToFollow);
+            newFollowing.setLocalDateTime(LocalDateTime.now());
+            followingRepository.save(newFollowing);
+        }
         return "redirect:/find";
     }
-    
+
     @PostMapping("/find/{profiletoleavefollowing}/leavefollowing")
-    public String deleteFollowed(@PathVariable String profiletoleavefollowing) {        
-        Following followingToDelete = followingRepository.findByFollowerAliasAndFollowedAlias(
-                profileService.findAliasForCurrentUser(), profiletoleavefollowing);        
+    public String deleteFollowed(@PathVariable String profiletoleavefollowing) {
+        Profile profileToRemoveFromFollowed = profileRepository.findByAlias(profiletoleavefollowing);
+        Following followingToDelete = followingRepository.findByFollowerAndFollowed(
+                profileService.findProfileForCurrentUser(), profileToRemoveFromFollowed);
         followingRepository.delete(followingToDelete);
         return "redirect:/find";
     }
-    
+
 }

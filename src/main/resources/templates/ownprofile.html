@@ -23,20 +23,33 @@
         
         <h3>Ketä seuraan</h3>  
         <ol>
-            <li th:each="following : ${whoIamFollowing}">
-                <span th:text="${following.followedAlias}">alias</span>:
-                <span th:text="${following.followedName}">nimi</span>
-                
+            <li th:each="dataPacket : ${whoIamFollowing}">
+                <span th:text="${dataPacket.alias}">alias</span>:
+                <span th:text="${dataPacket.name}">nimi</span>
+                , Following since <span th:text="${#temporals.format(dataPacket.localDateTime, 'dd-MM-yyyy HH:mm')}"></span>  
             </li>
         </ol>
         
         <h3>Ketkä seuraavat minua</h3>  
         <ol>
-            <li th:each="following : ${whoAreFollowingMe}">
-                <span th:text="${following.followerAlias}">alias</span>:
-                <span th:text="${following.followerName}">nimi</span>
-                <form th:action="@{/ownprofile/{stopfollowerprofile}/stopfollower(stopfollowerprofile=${following.followerAlias})}" method="POST">
+            <li th:each="dataPacket : ${whoAreFollowingMe}">
+                <span th:text="${dataPacket.alias}">alias</span>:
+                <span th:text="${dataPacket.name}">nimi</span>
+                , Following since <span th:text="${#temporals.format(dataPacket.localDateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                <form th:action="@{/ownprofile/{stopfollowerprofile}/stopfollower(stopfollowerprofile=${dataPacket.alias})}" method="POST">
                     <input type="submit" value="Torju seuraaminen"/>
+                </form>
+            </li>
+        </ol>
+        
+        <h3>Ketkä olen blokannut</h3>  
+        <ol>
+            <li th:each="blocked : ${blockeds}">
+                <span th:text="${blocked.alias}">alias</span>:
+                <span th:text="${blocked.name}">nimi</span>
+                , Following since <span th:text="${#temporals.format(blocked.localDateTime, 'dd-MM-yyyy HH:mm')}"></span>
+                <form th:action="@{/ownprofile/{removeblock}/removeblock(removeblock=${blocked.alias})}" method="POST">
+                    <input type="submit" value="Poista blokkaus"/>
                 </form>
             </li>
         </ol>

@@ -1,13 +1,13 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="fragments/layout :: head(titletext='Connection')">
+    <head th:replace="fragments/layout :: head(titletext='Community')">
         <meta charset="UTF-8" />
         <title>Title</title>
     </head>
     <body>
         <header class="container">
-            <h1>Tervetuloa Connection verkottoitumissovellukseen</h1>
-            <p>Connectionin käyttö vaatii rekisteröitymisen.</p>
+            <h1>Tervetuloa Community verkostoitumissovellukseen</h1>
+            <p>Communityn käyttö vaatii rekisteröitymisen.</p>
             <p>Rekisteröitymistä varten voit luoda uuden tunnuksen alla.</p>
             <p>Jos olet jo rekisteröitynyt, voit kirjautua ohessa olevan Login linkin kautta.</p>            
             <div th:if="${messagesuccess}" th:text="${messagesuccess}" th:class="${'alert ' + alertClass}"/>

@@ -1,0 +1,20 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(titletext='Community')">
+        <meta charset="UTF-8" />
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="fragments/layout :: navbar"></div>
+        <header class="container">
+            <h1 th:text="${profileheader}">Header</h1>
+        </header>
+        <main>
+            <section class="container">
+                <h3>Viestit</h3>
+                <div th:replace="fragments/layout :: messages(messages=${messages})"></div>
+            </section>
+            
+        </main>
+    </body>
+</html>

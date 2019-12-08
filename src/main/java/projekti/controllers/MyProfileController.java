@@ -1,5 +1,6 @@
 package projekti.controllers;
 
+import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -15,17 +16,13 @@ import projekti.repositories.BlockedRepository;
 import projekti.repositories.FollowingRepository;
 import projekti.repositories.MessageRepository;
 import projekti.repositories.ProfileRepository;
-import projekti.services.DataPacketServices;
 import projekti.services.ProfileService;
 
 @Controller
-public class OwnProfileController {
+public class MyProfileController {
 
     @Autowired
     private ProfileService profileService;
-    
-    @Autowired
-    private DataPacketServices dataPacketService;
 
     @Autowired
     private ProfileRepository profileRepository;
@@ -38,35 +35,41 @@ public class OwnProfileController {
     
     @Autowired
     private BlockedRepository blockedRepository;
+    
+    @GetMapping("/myprofile/mywall")
+    public String getOwnProfile() {  
+        Profile profileUsedNow = profileService.findProfileForCurrentUser();
+        return "redirect:/profiles/" +  profileUsedNow.getAlias();
+    }
 
-    @GetMapping("/ownprofile")
+    @GetMapping("/myprofile")
     public String getOwnProfile(Model model) {
         Profile profileUsedNow = profileService.findProfileForCurrentUser();
-        model.addAttribute("ownprofileheader", "Tervetuloa " + profileUsedNow.getName());
-        model.addAttribute("ownprofilemessages", messageRepository.findAll());       
+        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias() + ", Oma profiili");
+        model.addAttribute("messages", messageRepository.findAll());       
         
-        model.addAttribute("whoIamFollowing", dataPacketService.convertFollowerListToDataPackets(followingRepository.findByFollower(profileUsedNow)));
-        model.addAttribute("whoAreFollowingMe", dataPacketService.convertFollowedListToDataPackets(followingRepository.findByFollowed(profileUsedNow)));
-        model.addAttribute("blockeds", dataPacketService.convertBlockedListToDataPackets(blockedRepository.findByBlocker(profileUsedNow)));        
-        return "ownprofile";
+        model.addAttribute("whoIamFollowing", followingRepository.findByFollower(profileUsedNow));
+        model.addAttribute("whoAreFollowingMe", followingRepository.findByFollowed(profileUsedNow));
+        model.addAttribute("blockeds", blockedRepository.findByBlocker(profileUsedNow));    
+        
+        return "myprofile";
     }
     
-    @PostMapping("/ownprofile")
+    @PostMapping("/myprofile")
     public String add(@RequestParam String text) {
         if (text != null && !text.trim().isEmpty()) {
             Message message = new Message();
             message.setText(text.trim());
             Profile profileWhichUsedNow = profileService.findProfileForCurrentUser();
             message.setProfile(profileWhichUsedNow);
-            message.setAlias(profileWhichUsedNow.getAlias());
-
+            message.setLocalDateTime(LocalDateTime.now());
             messageRepository.save(message);
         }
 
-        return "redirect:/ownprofile";
+        return "redirect:/myprofile";
     }
 
-    @PostMapping("/ownprofile/{stopfollowerprofile}/stopfollower")
+    @PostMapping("/myprofile/{stopfollowerprofile}/stopfollower")
     public String removeFollower(@PathVariable String stopfollowerprofile) {
         Profile profileToRemoveFromFollowed = profileRepository.findByAlias(stopfollowerprofile);
         Following followingToDelete = followingRepository.findByFollowerAndFollowed(
@@ -75,16 +78,17 @@ public class OwnProfileController {
         Blocked blocked = new Blocked();
         blocked.setBlocked(profileToRemoveFromFollowed);
         blocked.setBlocker(profileService.findProfileForCurrentUser());
+        blocked.setLocalDateTime(LocalDateTime.now());
         blockedRepository.save(blocked);
-        return "redirect:/ownprofile";
+        return "redirect:/myprofile";
     }
     
-    @PostMapping("/ownprofile/{removeblock}/removeblock")
+    @PostMapping("/myprofile/{removeblock}/removeblock")
     public String removeBlock(@PathVariable String removeblock) {
         Profile profileToRemoveBlock = profileRepository.findByAlias(removeblock);
         Blocked blockedToDelete = blockedRepository.findByBlockerAndBlocked(
                 profileService.findProfileForCurrentUser(), profileToRemoveBlock);
         blockedRepository.delete(blockedToDelete);
-        return "redirect:/ownprofile";
+        return "redirect:/myprofile";
     }
 }

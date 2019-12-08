@@ -19,7 +19,6 @@ import projekti.entities.Blocked;
 import projekti.entities.Following;
 import projekti.entities.Profile;
 import projekti.repositories.BlockedRepository;
-import projekti.services.DataPacketServices;
 import projekti.services.ProfileService;
 
 @Controller
@@ -36,15 +35,14 @@ public class FindController {
 
     @Autowired
     private BlockedRepository blockedRepository;
-    
-    @Autowired
-    private DataPacketServices dataPacketService;
 
     String textToFind = "";
 
     @GetMapping("/find")
     public String find(Model model) {
         Profile currentProfile = profileService.findProfileForCurrentUser();
+        model.addAttribute("profileheader", currentProfile.getName() + " - " + currentProfile.getAlias() + ", Etsi uusia seurattavia käyttäjiä");
+        
         Pageable pageable = PageRequest.of(0, 25, Sort.by("name").descending());
         model.addAttribute("findedProfiles", profileRepository.findByNameContainingAndAliasNot(textToFind, currentProfile.getAlias(), pageable));
         List<Following> follewed = currentProfile.getWhoIamFollowing();

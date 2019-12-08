@@ -1,11 +1,8 @@
 package projekti.entities;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
-import java.util.List;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
-import javax.persistence.OneToMany;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,13 +12,12 @@ import org.springframework.data.jpa.domain.AbstractPersistable;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-public class Following extends AbstractPersistable<Long> {
-    
-    private LocalDateTime localDateTime;
+public class MessageComment extends AbstractPersistable<Long> {
         
-    @ManyToOne
-    private Profile follower;
+    private LocalDateTime localDateTime;
+
+    private String comment;
     
     @ManyToOne
-    private Profile followed;    
+    private Message message;
 }

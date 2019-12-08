@@ -27,4 +27,8 @@ public class ProfileService {
     public String findAliasForCurrentUser() {
         return findProfileForCurrentUser().getAlias();
     }
+        
+    public boolean isAliasReserved(String alias) {
+        return profileRepository.findByAlias(alias) != null;
+    }
 }

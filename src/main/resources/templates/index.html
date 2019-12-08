@@ -1,33 +1,38 @@
 <!DOCTYPE HTML>
 <html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
-    <head>
+    <head th:replace="fragments/layout :: head(titletext='Connection')">
         <meta charset="UTF-8" />
-        <title>Hello world</title>
+        <title>Title</title>
     </head>
     <body>
-        <h1>Tervetuloa Maju verkottoitumissovellukseen</h1>
-        <p>Mujan käyttö vaatii rekisteröitymisen. Rekisteröitymistä varten voit antaa tietosi alle. 
-            Jos olet jo rekisteröitynyt, voit kirjautua ohessa olevan linkin kautta.</p>
-        <form method="POST" th:action="@{/maju}">
-            <p>
-                Käyttäjätunnus
-                <input type="text" name="username"/>
-            </p>
-            <p>
-                Salasana
-                <input type="password" name="password"/>
-            </p>
-            <p>
-                Nimi
-                <input type="text" name="name"/>
-            </p>
-            <p>
-                Kaikille näkyvä alias-nimi
-                <input type="text" name="alias"/>
-            </p>
-            <input type="submit" value="Lähetä uusi käyttäjätunnus."/>
-        </form>
-        <p th:text="${info}">Info</p>
-        <p><a th:href="@{/ownprofile}">Login</a></p>
+        <header class="container">
+            <h1>Tervetuloa Connection verkottoitumissovellukseen</h1>
+            <p>Connectionin käyttö vaatii rekisteröitymisen.</p>
+            <p>Rekisteröitymistä varten voit luoda uuden tunnuksen alla.</p>
+            <p>Jos olet jo rekisteröitynyt, voit kirjautua ohessa olevan Login linkin kautta.</p>            
+            <div th:if="${messagesuccess}" th:text="${messagesuccess}" th:class="${'alert ' + alertClass}"/>
+            <p><a th:href="@{/login}">Login - Kirjaudu sisään</a></p>
+        </header>
+        <main>
+            <section class="container">
+                <p>&nbsp;</p>
+                <h2>Luo uusi tunnus</h2>
+                <p>Luo uusi tunnus, jolla voit kirjautua järjestelmään.</p>
+            </section>
+
+            <section class="container"> 
+                <form method="POST" action="/createnewaccount">
+                    <input name="username" type="text" class="form-control mb-2 mr-sm-2" placeholder="Uusi käyttäjätunnus" id="username">
+                        <div th:if="${messageusername}" th:text="${messageusername}" th:class="${'alert ' + alertClass}"/>
+                    <input name="password" type="password" class="form-control mb-2 mr-sm-2" placeholder="Salasana" id="password">
+                        <div th:if="${messagepassword}" th:text="${messagepassword}" th:class="${'alert ' + alertClass}"/>
+                    <input name="name" type="text" class="form-control mb-2 mr-sm-2" placeholder="Nimi" id="name">
+                        <div th:if="${messagename}" th:text="${messagename}" th:class="${'alert ' + alertClass}"/>
+                    <input name="alias" type="text" class="form-control mb-2 mr-sm-2" placeholder="Alias" id="alias">
+                        <div th:if="${messagealias}" th:text="${messagealias}" th:class="${'alert ' + alertClass}"/>
+                    <button name="submit" type="submit" class="btn btn-primary">Luo uusi käyttäjätunnus</button>
+                </form>
+            </section>
+        </main>
     </body>
 </html>

@@ -1,63 +1,43 @@
 package projekti.controllers;
 
+import javax.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.entities.Account;
-import projekti.entities.Profile;
-import projekti.repositories.AccountRepository;
-import projekti.repositories.ProfileRepository;
+import projekti.services.ProfileService;
+import projekti.services.AccountService;
 
 @Controller
 public class AccountController {
-
-//    @GetMapping("/maju")
-//    public String account(Model model) {
-//        model.addAttribute("message", "World!");
-//        return "index";
-//    }
     
     @Autowired
-    AccountRepository accountRepository;
-    
-    @Autowired
-    ProfileRepository profileRepository;
+    AccountService accountService;
 
-    @Autowired
-    PasswordEncoder passwordEncoder;
-    
-    String info = "";
-
-    @GetMapping("/maju")
-    public String getMaju(Model model) {
-        model.addAttribute("info", this.info);
-        this.info = "";
+    @GetMapping("/createnewaccount")
+    public String index() {
         return "index";
     }
 
-    @PostMapping("/maju")
-    public String addMaju(@RequestParam String username, @RequestParam String password, @RequestParam String name, @RequestParam String alias) {
-        if (accountRepository.findByUsername(username) != null) {
-            this.info = "Käyttäjätunnus " + username + " on jo käytössä.";            
-            return "redirect:/maju";
-        } else if (profileRepository.findByAlias(alias) != null) {
-            this.info = "Alias-nimi " + alias + " on jo käytössä.";
-            return "redirect:/maju";
-        }
-        Account newAccount = new Account(username, passwordEncoder.encode(password));        
-        accountRepository.save(newAccount);
+    @PostMapping("/createnewaccount")
+    public String createnewaccount(
+            @RequestParam String username, 
+            @RequestParam String password,
+            @RequestParam String name, 
+            @RequestParam String alias,
+            RedirectAttributes redirectAttributes
+//          ,  BindingResult bindingResult
+    ) {
         
-        Profile profile = new Profile(name, alias);
-        Account accountFromDataBase = accountRepository.findByUsername(username);
-        profile.setAccount(accountFromDataBase);
-        profileRepository.save(profile);
-        
-            this.info = "Käyttäjätunnus " + username + " luotu. Voit nyt kirjautua sisään.";
-        return "redirect:/maju";
-        
+//        if(bindingResult.hasErrors()) {
+//            return "redirect:/createnewaccount";
+//        }
+        accountService.createNewAccount(username, password, name, alias, redirectAttributes);
+        return "redirect:/createnewaccount";        
     }
 }

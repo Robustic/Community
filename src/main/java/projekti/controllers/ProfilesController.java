@@ -21,50 +21,39 @@ import projekti.repositories.FollowingRepository;
 import projekti.repositories.MessageCommentRepository;
 import projekti.repositories.MessageRepository;
 import projekti.repositories.ProfileRepository;
+import projekti.services.FollowingService;
 import projekti.services.ProfileService;
 
 @Controller
 public class ProfilesController {
     
     @Autowired
-    private ProfileRepository profileRepository;
-    
-    @Autowired
     private ProfileService profileService;
     
     @Autowired
-    private FollowingRepository followingRepository;
+    private FollowingService followingService;
     
-    @Autowired
-    private MessageRepository messageRepository;
-    
-    @Autowired
-    private MessageCommentRepository messageCommentRepository;
+    @GetMapping("/mywall")
+    public String getOwnProfile() {
+        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias();
+    }
     
     @GetMapping("/profiles/{profileAlias}")
-    public String getProfile(Model model, @PathVariable String profileAlias) {        
-        Profile profile = profileRepository.findByAlias(profileAlias);    
-        model.addAttribute("profileheader", profile.getName() + " - " + profileAlias + ", Seinä");
-        
-        List<Following> followings = followingRepository.findByFollower(profile);
-        List<Profile> profiles = new ArrayList<>();
-        for (Following following : followings) {
-            profiles.add(following.getFollowed());
-        }
-        profiles.add(profile);
-        Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
-        model.addAttribute("messages", messageRepository.findByProfileIn(profiles, pageable));
+    public String getProfileWithAlias(Model model, @PathVariable String profileAlias) {
+        model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
+        profileService.getProfileWithAlias(model, profileAlias);
         return "profile";
     }
     
-    @PostMapping("/profiles/{profileAlias}/messages/{id}")
-    public String postCommentToMessage(@PathVariable String profileAlias, @PathVariable Long id, @RequestParam String comment) {
-        Message message = messageRepository.getOne(id);   
-        MessageComment messageComment = new MessageComment();
-        messageComment.setComment(comment);
-        messageComment.setMessage(message);
-        messageComment.setLocalDateTime(LocalDateTime.now());
-        messageCommentRepository.save(messageComment);
-        return "redirect:/profiles/" + profileAlias;
-    } 
+    @PostMapping("/profiles/{profiletofollow}/tofollow")
+    public String addFollowed(@PathVariable String profiletofollow, @RequestParam String redirect) {
+        followingService.addFollowed(redirect, profiletofollow);
+        return "redirect:" + profileService.redirectWithParameters(redirect, profiletofollow, -1L);
+    }
+
+    @PostMapping("/profiles/{profiletoleavefollowing}/leavefollowing")
+    public String deleteFollowed(@PathVariable String profiletoleavefollowing, @RequestParam String redirect) {
+        followingService.deleteFollowed(redirect, profiletoleavefollowing);
+        return "redirect:" + profileService.redirectWithParameters(redirect, profiletoleavefollowing, -1L);
+    }
 }

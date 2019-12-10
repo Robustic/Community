@@ -12,7 +12,7 @@ import projekti.entities.FileObject;
 import projekti.repositories.FileObjectRepository;
 
 @Controller
-public class ImageController {
+public class FilesController {
     
     @Autowired
     private FileObjectRepository fileObjectRepository;

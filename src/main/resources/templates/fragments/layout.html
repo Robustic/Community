@@ -14,7 +14,7 @@
                     margin-bottom:5px;
                     height:1px;
                     width:100%;
-                    border-top:1px solid gray;
+                    border-top: 1px solid #ccc;
                 }
                 .customborder{
                     display: block;
@@ -30,11 +30,15 @@
         </style>
     </head>
     <body>
-        <div th:fragment="navbar">
+        <div th:fragment="navbar(currentProfile)">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <a class="navbar-brand" href="/myprofile">MyProfile</a>
-                <a class="nav-link" href="/myprofile/mywall">MyWall</a>
-                <a class="nav-link" href="/find">Etsi Profiileja</a>
+                <a class="navbar-brand" href="/profiles">Community</a>
+                <a class="nav-link" href="/mywall">Seinäni</a>
+                <a class="nav-link" href="/mymessages">Viestini</a>
+                <a class="nav-link" href="/mypictures">Kuvani</a>
+                <a class="nav-link" href="/mysettings">Profiiliasetukseni</a>                
+                (Olet kirjautunut tunnuksella&nbsp;<a th:text="${currentProfile.name}">Name</a><a>&nbsp;-&nbsp;</a>
+                <a th:text="${currentProfile.alias}">Alias</a>)
                 <a class="nav-link" href="/logout">Logout</a>
             </nav>
         </div>
@@ -44,81 +48,81 @@
             </div>
             <div th:each="message : ${messages}">
                 <div class="customborder">
-                <div class="media">
-                    <a class="mr-3">
-                        <img src="/files/mikki.gif" alt="Mikki" class="rounded-circle"></img>
-                    </a>
-                    <div class="media-body">
-                        <h5 class="mt-0" th:text="${message.profile.name}">Name</h5>
-                        <a th:href="@{/profiles/{alias}(alias=${message.profile.alias})}" th:text="${message.profile.alias}">alias</a>
-                        <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
-                        <p th:text="${message.text}">text</p>
-                        
-                        <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comments/{commentalias}(alias=${message.profile.alias}, id=${message.id}, commentalias=${currentalias})}">
-                            <input type="text" name="comment"/>
-                            <input type="submit" value="Lähetä uusi kommentti"/>
-                        </form>
+                    <div class="media">
+                        <a class="mr-3">
+                            <img src="/files/mikki.gif" alt="Mikki" class="rounded-circle"></img>
+                        </a>
+                        <div class="media-body">
+                            <h5 class="mt-0" th:text="${message.profile.name}">Name</h5>
+                            <a th:href="@{/profiles/{alias}(alias=${message.profile.alias})}" th:text="${message.profile.alias}">alias</a>
+                            <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                            <p th:text="${message.text}">text</p>
 
-                        <div class="media mt-3" th:each="messageCommentti : ${message.messageComment}">
-                            <a class="pr-3">
-                                <img src="/files/mikki.gif" alt="Mikki" class="rounded-circle"></img>
-                            </a>
-                            <div class="media-body">
-                                <h5 class="mt-0" th:text="${messageCommentti.message.profile.name}">Name</h5>
-                                <a th:href="@{/profiles/{alias}(alias=${messageCommentti.message.profile.alias})}" th:text="${messageCommentti.message.profile.alias}">alias</a>
-                                <a th:text="${#temporals.format(messageCommentti.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
-                                <p th:text="${messageCommentti.comment}">comment</p>
+                            <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comments/{commentalias}(alias=${message.profile.alias}, id=${message.id}, commentalias=${currentalias})}">
+                                <input type="text" name="comment"/>
+                                <input type="submit" value="Lähetä uusi kommentti"/>
+                            </form>
+
+                            <div class="media mt-3" th:each="messageCommentti : ${message.messageComment}">
+                                <a class="pr-3">
+                                    <img src="/files/mikki.gif" alt="Mikki" class="rounded-circle"></img>
+                                </a>
+                                <div class="media-body">
+                                    <h5 class="mt-0" th:text="${messageCommentti.message.profile.name}">Name</h5>
+                                    <a th:href="@{/profiles/{alias}(alias=${messageCommentti.message.profile.alias})}" th:text="${messageCommentti.message.profile.alias}">alias</a>
+                                    <a th:text="${#temporals.format(messageCommentti.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                                    <p th:text="${messageCommentti.comment}">comment</p>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
-                <!-- <p class="row">
-                    <span class="col-2">
-                        <a th:text="${message.profile.name}">Name</a>
-                    </span>
-                    <span class="col-1">                        
-                        <a th:href="@{/profiles/{alias}(alias=${message.profile.alias})}" th:text="${message.profile.alias}">alias</a>
-                    </span>
-                    <span class="col-2">
-                        <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
-                    </span>
-                    <span class="col-7">
-                        <a th:text="${message.text}">text</a>
-                    </span>                    
-                </p>
-                <div th:each="messageCommentti : ${message.messageComment}">
-                    <p class="row">
-                        <span class="col-1">
-                        </span>
+                    <!-- <p class="row">
                         <span class="col-2">
-                            <a th:text="${messageCommentti.message.profile.name}">Name</a>
+                            <a th:text="${message.profile.name}">Name</a>
                         </span>
                         <span class="col-1">                        
-                            <a th:href="@{/profiles/{alias}(alias=${messageCommentti.message.profile.alias})}" th:text="${messageCommentti.message.profile.alias}">alias</a>
+                            <a th:href="@{/profiles/{alias}(alias=${message.profile.alias})}" th:text="${message.profile.alias}">alias</a>
                         </span>
                         <span class="col-2">
-                            <a th:text="${#temporals.format(messageCommentti.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                            <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                         </span>
-                        <span class="col-6">
-                            <a th:text="${messageCommentti.comment}">comment</a>
-                        </span>
+                        <span class="col-7">
+                            <a th:text="${message.text}">text</a>
+                        </span>                    
                     </p>
-                </div>
-                <div class="row">
-                    <span class="col-1">
-                    </span>
-                    <div class="col-11">   
-                        <form method="POST" th:action="@{/profiles/{alias}/messages/{id}(alias=${message.profile.alias}, id=${message.id})}">
-                            <input type="text" name="comment"/>
-                            <input type="submit" value="Lähetä uusi kommentti"/>
-                        </form>
+                    <div th:each="messageCommentti : ${message.messageComment}">
+                        <p class="row">
+                            <span class="col-1">
+                            </span>
+                            <span class="col-2">
+                                <a th:text="${messageCommentti.message.profile.name}">Name</a>
+                            </span>
+                            <span class="col-1">                        
+                                <a th:href="@{/profiles/{alias}(alias=${messageCommentti.message.profile.alias})}" th:text="${messageCommentti.message.profile.alias}">alias</a>
+                            </span>
+                            <span class="col-2">
+                                <a th:text="${#temporals.format(messageCommentti.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                            </span>
+                            <span class="col-6">
+                                <a th:text="${messageCommentti.comment}">comment</a>
+                            </span>
+                        </p>
                     </div>
+                    <div class="row">
+                        <span class="col-1">
+                        </span>
+                        <div class="col-11">   
+                            <form method="POST" th:action="@{/profiles/{alias}/messages/{id}(alias=${message.profile.alias}, id=${message.id})}">
+                                <input type="text" name="comment"/>
+                                <input type="submit" value="Lähetä uusi kommentti"/>
+                            </form>
+                        </div>
+                    </div>
+                    <p class="row">
+                    </p>
+                    <div class="h-divider">
+                    </div> -->
                 </div>
-                <p class="row">
-                </p>
-                <div class="h-divider">
-                </div> -->
-            </div>
             </div>
         </div>
     </body>

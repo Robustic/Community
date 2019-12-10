@@ -19,7 +19,7 @@ public class DefaultController {
     public String start(Model model) {
         initializeDatabase.setToDataBase();
         if (accountService.checkIfLoggedIn()) {
-            return "redirect:/myprofile";
+            return "redirect:/profiles";
         }
         return "redirect:/createnewaccount";
     }

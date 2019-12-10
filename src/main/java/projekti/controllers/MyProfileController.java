@@ -43,11 +43,7 @@ public class MyProfileController {
     @Autowired
     private FileObjectRepository fileObjectRepository;
     
-    @GetMapping("/myprofile/mywall")
-    public String getOwnProfile() {  
-        Profile profileUsedNow = profileService.findProfileForCurrentUser();
-        return "redirect:/profiles/" +  profileUsedNow.getAlias();
-    }
+    
 
     @GetMapping("/myprofile")
     public String getOwnProfile(Model model) {

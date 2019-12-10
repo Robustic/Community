@@ -5,7 +5,7 @@
         <title>Title</title>
     </head>
     <body>
-        <div th:replace="fragments/layout :: navbar"></div>
+        <div th:replace="fragments/layout :: navbar(currentProfile=${currentProfile})"></div>
         <header class="container">
             <h1 th:text="${profileheader}">Header</h1>
         </header>

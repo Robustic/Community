@@ -11,6 +11,11 @@
         </header>
         <main>               
             <section class="container">
+                <h3>Kuvani</h3> 
+                <form th:action="@{/myprofile/files}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file" />
+                    <input type="submit" value="Lähetä kuva"/>
+                </form>
                 <h3>Ketä seuraan</h3>  
                 <!-- <ul>
                     <li th:each="following : ${whoIamFollowing}">

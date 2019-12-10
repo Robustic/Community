@@ -1,5 +1,6 @@
 package projekti.controllers;
 
+import java.io.IOException;
 import java.time.LocalDateTime;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -8,11 +9,14 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.multipart.MultipartFile;
 import projekti.entities.Blocked;
+import projekti.entities.FileObject;
 import projekti.entities.Message;
 import projekti.entities.Following;
 import projekti.entities.Profile;
 import projekti.repositories.BlockedRepository;
+import projekti.repositories.FileObjectRepository;
 import projekti.repositories.FollowingRepository;
 import projekti.repositories.MessageRepository;
 import projekti.repositories.ProfileRepository;
@@ -35,6 +39,9 @@ public class MyProfileController {
     
     @Autowired
     private BlockedRepository blockedRepository;
+    
+    @Autowired
+    private FileObjectRepository fileObjectRepository;
     
     @GetMapping("/myprofile/mywall")
     public String getOwnProfile() {  
@@ -90,5 +97,19 @@ public class MyProfileController {
                 profileService.findProfileForCurrentUser(), profileToRemoveBlock);
         blockedRepository.delete(blockedToDelete);
         return "redirect:/myprofile";
+    }
+    
+    @PostMapping("/myprofile/files")
+    public String save(@RequestParam("file") MultipartFile file) throws IOException {
+        FileObject fo = new FileObject();
+
+        fo.setFilename(file.getOriginalFilename());
+        fo.setContentType(file.getContentType());
+        fo.setContentLength(file.getSize());
+        fo.setContent(file.getBytes());
+
+        fileObjectRepository.save(fo);
+
+        return "redirect:/files";
     }
 }

@@ -5,6 +5,29 @@
         <title th:text="${titletext}">Title</title>
         <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no"/>
         <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"/>
+                <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
+                <!-- Latest compiled and minified JavaScript -->
+                <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.2/js/bootstrap.min.js"></script>
+                <style type="text/css">
+                .h-divider{
+                    margin-top:5px;
+                    margin-bottom:5px;
+                    height:1px;
+                    width:100%;
+                    border-top:1px solid gray;
+                }
+                .customborder{
+                    display: block;
+                    width: 100%;
+                    padding: 6px 12px;
+                    color: #555;
+                    background-color: #fff;
+                    background-image: none;
+                    border: 1px solid #ccc;
+                    border-radius: 4px;
+                }
+                H5 {display: inline;}
+        </style>
     </head>
     <body>
         <div th:fragment="navbar">
@@ -17,8 +40,39 @@
         </div>
         <div>TODO write content</div>
         <div th:fragment="messages(messages)">
-            <div th:each="message : ${messages}">                
-                <p class="row">
+            <div class="h-divider">
+            </div>
+            <div th:each="message : ${messages}">
+                <div class="customborder">
+                <div class="media">
+                    <a class="mr-3">
+                        <img src="/files/mikki.gif" alt="Mikki" class="rounded-circle"></img>
+                    </a>
+                    <div class="media-body">
+                        <h5 class="mt-0" th:text="${message.profile.name}">Name</h5>
+                        <a th:href="@{/profiles/{alias}(alias=${message.profile.alias})}" th:text="${message.profile.alias}">alias</a>
+                        <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                        <p th:text="${message.text}">text</p>
+                        
+                        <form method="POST" th:action="@{/profiles/{alias}/messages/{id}(alias=${message.profile.alias}, id=${message.id})}">
+                            <input type="text" name="comment"/>
+                            <input type="submit" value="Lähetä uusi kommentti"/>
+                        </form>
+
+                        <div class="media mt-3" th:each="messageCommentti : ${message.messageComment}">
+                            <a class="pr-3">
+                                <img src="/files/mikki.gif" alt="Mikki" class="rounded-circle"></img>
+                            </a>
+                            <div class="media-body">
+                                <h5 class="mt-0" th:text="${messageCommentti.message.profile.name}">Name</h5>
+                                <a th:href="@{/profiles/{alias}(alias=${messageCommentti.message.profile.alias})}" th:text="${messageCommentti.message.profile.alias}">alias</a>
+                                <a th:text="${#temporals.format(messageCommentti.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                                <p th:text="${messageCommentti.comment}">comment</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- <p class="row">
                     <span class="col-2">
                         <a th:text="${message.profile.name}">Name</a>
                     </span>
@@ -61,7 +115,10 @@
                     </div>
                 </div>
                 <p class="row">
-                </p>  
+                </p>
+                <div class="h-divider">
+                </div> -->
+            </div>
             </div>
         </div>
     </body>

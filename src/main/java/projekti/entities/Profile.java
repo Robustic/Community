@@ -26,16 +26,19 @@ public class Profile extends AbstractPersistable<Long> {
     private List<Message> message = new ArrayList<>();
     
     @OneToMany(mappedBy = "follower")
-    private List<Following> whoIamFollowing;
+    private List<Following> whoIamFollowing = new ArrayList<>();
     
     @OneToMany(mappedBy = "followed")
-    private List<Following> whoAreFollowingMe; 
+    private List<Following> whoAreFollowingMe = new ArrayList<>(); 
     
     @OneToMany(mappedBy = "blocker")
-    private List<Blocked> whoIamBlocked;
+    private List<Blocked> whoIamBlocked = new ArrayList<>();
     
     @OneToMany(mappedBy = "blocked")
-    private List<Blocked> whoAreBlockedMe;
+    private List<Blocked> whoAreBlockedMe = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "profile")
+    private List<FileObject> fileObjects = new ArrayList<>();
     
     public Profile(String name, String alias) {
         this.name = name;

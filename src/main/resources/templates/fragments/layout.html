@@ -54,7 +54,7 @@
                         <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                         <p th:text="${message.text}">text</p>
                         
-                        <form method="POST" th:action="@{/profiles/{alias}/messages/{id}(alias=${message.profile.alias}, id=${message.id})}">
+                        <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comments/{commentalias}(alias=${message.profile.alias}, id=${message.id}, commentalias=${currentalias})}">
                             <input type="text" name="comment"/>
                             <input type="submit" value="Lähetä uusi kommentti"/>
                         </form>

@@ -1,6 +1,7 @@
 package projekti.entities;
 
 import java.time.LocalDateTime;
+import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.ManyToOne;
 import lombok.AllArgsConstructor;
@@ -16,6 +17,7 @@ public class MessageComment extends AbstractPersistable<Long> {
         
     private LocalDateTime localDateTime;
 
+    @Column(columnDefinition = "TEXT")
     private String comment;
     
     @ManyToOne

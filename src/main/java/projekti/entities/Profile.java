@@ -25,6 +25,9 @@ public class Profile extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "profile")
     private List<Message> message = new ArrayList<>();
     
+    @OneToMany(mappedBy = "profile")
+    private List<MessageComment> messageComments = new ArrayList<>();
+    
     @OneToMany(mappedBy = "follower")
     private List<Following> whoIamFollowing = new ArrayList<>();
     

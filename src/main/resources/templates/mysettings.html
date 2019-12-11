@@ -1,0 +1,160 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(titletext='Community')">
+        <meta charset="UTF-8" />
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="fragments/layout :: navbar(currentProfile=${currentProfile})"></div>
+        <header class="container">
+            <h1 th:text="${profileheader}">Header</h1>
+        </header>
+        <main>               
+            <section class="container">
+                <h3>Kuvani</h3> 
+                <form th:action="@{/mysettings/files}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file"/>
+                    <input type="submit" class="btn btn-primary" value="Lähetä kuva"/>
+                </form>
+                
+                <h3>Ketä seuraan</h3>
+                <table class="table"> 
+                    <div th:each="following : ${whoIamFollowing}">                                     
+                        <tr>
+                            <td>
+                                <a th:text="${following.followed.name}">Name</a>
+                            </td>
+                            <td>                        
+                                <a th:href="@{/profiles/{alias}(alias=${following.followed.alias})}" th:text="${following.followed.alias}">alias</a>
+                            </td>
+                            <td>                        
+                                <a th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}">alias</a>
+                            </td>
+                            <td>
+                                <form method="POST" th:action="@{/profiles/{profiletoleavefollowing}/leavefollowing(profiletoleavefollowing=${following.followed.alias})}">
+                                    <input type="hidden" name="redirect" th:value="mysettings"/>
+                                    <input type="hidden" name="aliastoredirect" th:value="0"/>
+                                    <input type="hidden" name="redirectid" th:value="0"/>
+                                    <input type="submit" class="btn btn-info" value="Peru seuraaminen"/>
+                                </form>
+                            </td>
+                        </tr>                        
+                    </div>
+                </table>                
+            </section>            
+            
+            <section class="container">
+                <h3>Ketkä seuraavat minua</h3>
+                <!-- <div th:each="following : ${whoAreFollowingMe}"> 
+                    <div class="row">
+                        <p class="col-2">
+                            <a th:text="${following.follower.name}">Name</a>
+                        </p>
+                        <p class="col-1">                        
+                            <a th:href="@{/profiles/{alias}(alias=${following.follower.alias})}" th:text="${following.follower.alias}">alias</a>
+                        </p>
+                        <p class="col-2">
+                            <a th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                        </p>
+                        <div class="col-7">
+                            <form th:action="@{/mysettings/{stopfollowerprofile}/stopfollower(stopfollowerprofile=${following.follower.alias})}" method="POST">
+                                <input type="hidden" name="redirect" value="mysettings"/>
+                                <input type="submit" value="Torju seuraaminen"/>
+                            </form>
+                        </div>
+                    </div>
+                </div> -->
+                <table class="table"> 
+                    <div th:each="following : ${whoAreFollowingMe}">                                     
+                        <tr>
+                            <td>
+                                <a th:text="${following.follower.name}">Name</a>
+                            </td>
+                            <td>                        
+                                <a th:href="@{/profiles/{alias}(alias=${following.follower.alias})}" th:text="${following.follower.alias}">alias</a>
+                            </td>
+                            <td>                        
+                                <a th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}">alias</a>
+                            </td>
+                            <td>
+                                <form method="POST" th:action="@{/mysettings/{setblock}/setblock(setblock=${following.follower.alias})}">
+                                    <input type="hidden" name="redirect" th:value="mysettings"/>
+                                    <input type="hidden" name="aliastoredirect" th:value="0"/>
+                                    <input type="hidden" name="redirectid" th:value="0"/>
+                                    <input type="submit" class="btn btn-danger" value="Torju seuraaminen"/>
+                                </form>
+                            </td>
+                        </tr>                        
+                    </div>
+                </table>  
+            </section>
+
+            <section class="container">
+                <h3>Ketkä olen blokannut</h3>
+                <table class="table"> 
+                    <div th:each="oneBlocked : ${blockeds}">                                     
+                        <tr>
+                            <td>
+                                <a th:text="${oneBlocked.blocked.name}">Name</a>
+                            </td>
+                            <td>                        
+                                <a th:href="@{/profiles/{alias}(alias=${oneBlocked.blocked.alias})}" th:text="${oneBlocked.blocked.alias}">alias</a>
+                            </td>
+                            <td>                        
+                                <a th:text="${#temporals.format(oneBlocked.localDateTime, 'dd-MM-yyyy HH:mm')}">alias</a>
+                            </td>
+                            <td>
+                                <form method="POST" th:action="@{/mysettings/{removeblock}/removeblock(removeblock=${oneBlocked.blocked.alias})}">
+                                    <input type="hidden" name="redirect" th:value="mysettings"/>
+                                    <input type="hidden" name="aliastoredirect" th:value="0"/>
+                                    <input type="hidden" name="redirectid" th:value="0"/>
+                                    <input type="submit" class="btn btn-warning" value="Poista blokkaus"/>
+                                </form>
+                            </td>
+                        </tr>                        
+                    </div>
+                </table>  
+                <!-- <div th:each="oneBlocked : ${blockeds}"> 
+                    <div class="row">
+                        <p class="col-2">
+                            <a th:text="${oneBlocked.blocked.name}">Name</a>
+                        </p>
+                        <p class="col-1">                        
+                            <a th:href="@{/profiles/{alias}(alias=${oneBlocked.blocked.alias})}" th:text="${oneBlocked.blocked.alias}">alias</a>
+                        </p>
+                        <p class="col-2">
+                            <a th:text="${#temporals.format(oneBlocked.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
+                        </p>
+                        <div class="col-7">
+                            <form th:action="@{/mysettings/{removeblock}/removeblock(removeblock=${oneBlocked.blocked.alias})}" method="POST">
+                                <input type="hidden" name="redirect" value="mysettings"/>
+                                <input type="submit" value="Poista blokkaus"/>
+                            </form>
+                        </div>
+                    </div>
+                </div> -->
+            </section>
+            
+            <!-- <section class="container">
+                <h3>Viestini</h3>
+                <div th:replace="fragments/layout :: messages(messages=${messages}, redirectvalue=mysettings)"></div>
+                <!-- <form method="POST" th:action="@{/mysettings/newmessage}" action="/mysettings/newmessage">
+                    <input type="hidden" name="redirect" th:value="mysettings"/>
+                    <input type="hidden" name="aliastoredirect" th:value="0"/>
+                    <input type="hidden" name="redirectid" th:value="0"/>
+                    <input type="text" name="text"/>
+                    <input type="submit" value="Lähetä uusi viesti"/>
+                </form> -->                
+            <!--     <form method="POST" th:action="@{/mysettings/newmessage}" action="/mysettings/newmessage">
+                    <input type="hidden" name="redirect" th:value="mysettings"/>
+                    <input type="hidden" name="aliastoredirect" th:value="0"/>
+                    <input type="hidden" name="redirectid" th:value="0"/>
+                    <div class="form-group">
+                        <input type="text" name="text" class="form-control" placeholder="Kirjoita uusi viesti" id="comment"></input>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Lähetä uusi viesti"/>
+                </form>
+            </section> -->
+        </main>
+    </body>
+</html>

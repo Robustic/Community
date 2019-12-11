@@ -55,8 +55,8 @@ public class ProfileService {
         if (redirect.equals("profiles")) {
             return "/profiles";
         }
-        if (redirect.equals("settings")) {
-            return "/profiles/settings";
+        if (redirect.equals("mysettings")) {
+            return "/mysettings";
         }
         if (redirect.equals("profile")) {
             return "/profiles/" + alias;
@@ -100,5 +100,14 @@ public class ProfileService {
         }
 
         model.addAttribute("blockedMe", blockerProfiles);
+    }
+    
+    public void getMySettings(Model model) {
+        Profile profileUsedNow = findProfileForCurrentUser();
+        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias() + ", Oma profiili");     
+        
+        model.addAttribute("whoIamFollowing", followingRepository.findByFollower(profileUsedNow));
+        model.addAttribute("whoAreFollowingMe", followingRepository.findByFollowed(profileUsedNow));
+        model.addAttribute("blockeds", blockedRepository.findByBlocker(profileUsedNow));    
     }
 }

@@ -33,6 +33,7 @@
         <div th:fragment="navbar(currentProfile)">
             <nav class="navbar navbar-expand-lg navbar-light bg-light">
                 <a class="navbar-brand" href="/profiles">Community</a>
+                <a class="nav-link" href="/profiles">Etsi</a>
                 <a class="nav-link" href="/mywall">Seinäni</a>
                 <a class="nav-link" href="/mymessages">Viestini</a>
                 <a class="nav-link" href="/mypictures">Kuvani</a>
@@ -43,9 +44,7 @@
             </nav>
         </div>
         <div>TODO write content</div>
-        <div th:fragment="messages(messages)">
-            <div class="h-divider">
-            </div>
+        <div th:fragment="messages(messages, redirectvalue, redirectcurrentprofile)">
             <div th:each="message : ${messages}">
                 <div class="customborder">
                     <div class="media">
@@ -58,9 +57,18 @@
                             <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                             <p th:text="${message.text}">text</p>
 
-                            <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comments/{commentalias}(alias=${message.profile.alias}, id=${message.id}, commentalias=${currentalias})}">
+                            <!-- <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comments/{commentalias}(alias=${message.profile.alias}, id=${message.id}, commentalias=${currentalias})}">
                                 <input type="text" name="comment"/>
                                 <input type="submit" value="Lähetä uusi kommentti"/>
+                            </form> -->
+                            <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comment(alias=${message.profile.alias}, id=${message.id})}">
+                                <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                <input type="hidden" name="aliastoredirect" th:value="${redirectcurrentprofile.alias}"/>
+                                <input type="hidden" name="redirectid" th:value="${message.id}"/>
+                                <div class="form-group">
+                                    <input type="text" name="comment" class="form-control" placeholder="Kirjoita kommentti" id="comment"></input>
+                                </div>
+                                <input type="submit" class="btn btn-primary" value="Lähetä uusi kommentti"/>
                             </form>
 
                             <div class="media mt-3" th:each="messageCommentti : ${message.messageComment}">
@@ -68,8 +76,8 @@
                                     <img src="/files/mikki.gif" alt="Mikki" class="rounded-circle"></img>
                                 </a>
                                 <div class="media-body">
-                                    <h5 class="mt-0" th:text="${messageCommentti.message.profile.name}">Name</h5>
-                                    <a th:href="@{/profiles/{alias}(alias=${messageCommentti.message.profile.alias})}" th:text="${messageCommentti.message.profile.alias}">alias</a>
+                                    <h5 class="mt-0" th:text="${messageCommentti.profile.name}">Name</h5>
+                                    <a th:href="@{/profiles/{alias}(alias=${messageCommentti.profile.alias})}" th:text="${messageCommentti.message.profile.alias}">alias</a>
                                     <a th:text="${#temporals.format(messageCommentti.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                                     <p th:text="${messageCommentti.comment}">comment</p>
                                 </div>

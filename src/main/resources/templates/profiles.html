@@ -55,7 +55,9 @@
                                                 <input type="submit" value="Seuraa"/>
                                             </form> -->                                        
                                             <form method="POST" th:action="@{/profiles/{profiletofollow}/tofollow(profiletofollow=${profile.alias})}">
-                                                <input type="hidden" name="redirect" value="community"/>
+                                                <input type="hidden" name="redirect" th:value="profiles"/>
+                                                <input type="hidden" name="aliastoredirect" th:value="${profile.alias}"/>
+                                                <input type="hidden" name="redirectid" th:value="0"/>
                                                 <input type="submit" class="btn btn-success" value="Seuraa"/>
                                             </form>
                                         </div>
@@ -64,7 +66,9 @@
                                                 <input type="submit" value="Peru seuraaminen"/>
                                             </form> -->
                                             <form method="POST" th:action="@{/profiles/{profiletoleavefollowing}/leavefollowing(profiletoleavefollowing=${profile.alias})}">
-                                                <input type="hidden" name="redirect" value="community"/>
+                                                <input type="hidden" name="redirect" th:value="profiles"/>
+                                                <input type="hidden" name="aliastoredirect" th:value="${profile.alias}"/>
+                                                <input type="hidden" name="redirectid" th:value="0"/>
                                                 <input type="submit" class="btn btn-info" value="Peru seuraaminen"/>
                                             </form>
                                         </div>

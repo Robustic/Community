@@ -6,6 +6,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import projekti.InitializeDatabase;
 import projekti.services.AccountService;
+import projekti.services.ProfileService;
 
 @Controller
 public class DefaultController {
@@ -13,7 +14,10 @@ public class DefaultController {
     private InitializeDatabase initializeDatabase;
     
     @Autowired
-    AccountService accountService;
+    private AccountService accountService;
+    
+    @Autowired
+    private ProfileService profileService;
 
     @GetMapping("*")
     public String start(Model model) {
@@ -23,4 +27,24 @@ public class DefaultController {
         }
         return "redirect:/createnewaccount";
     }
+    
+    @GetMapping("/mywall")
+    public String getOwnProfile() {
+        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias();
+    }
+        
+//    @GetMapping("/mymessages")
+//    public String getOwnProfileMessages() {
+//        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias() + "/messages";
+//    }
+//    
+//    @GetMapping("/mypictures")
+//    public String getOwnProfilePictures() {
+//        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias() + "/pictures";
+//    }
+//    
+//    @GetMapping("/mysettings")
+//    public String getOwnProfileSettings() {
+//        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias() + "/settings";
+//    }
 }

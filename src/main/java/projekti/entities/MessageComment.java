@@ -21,5 +21,8 @@ public class MessageComment extends AbstractPersistable<Long> {
     private String comment;
     
     @ManyToOne
+    private Profile profile;
+    
+    @ManyToOne
     private Message message;
 }

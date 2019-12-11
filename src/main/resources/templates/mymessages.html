@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(titletext='Community')">
+        <meta charset="UTF-8" />
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="fragments/layout :: navbar(currentProfile=${currentProfile})"></div>
+        <header class="container">
+            <h1 th:text="${profileheader}">Header</h1>
+        </header>
+        <main>            
+            <section class="container">
+                <h3>Viestini</h3>
+                <div th:replace="fragments/layout :: messages(messages=${messages}, redirectvalue=mymessages, redirectcurrentprofile=${currentProfile})"></div>             
+                <form method="POST" th:action="@{/mymessages/newmessage}" action="/mymessages/newmessage">
+                    <input type="hidden" name="redirect" th:value="mymessages"/>
+                    <input type="hidden" name="aliastoredirect" th:value="0"/>
+                    <input type="hidden" name="redirectid" th:value="0"/>
+                    <div class="form-group">
+                        <input type="text" name="text" class="form-control" placeholder="Kirjoita uusi viesti" id="comment"></input>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Lähetä uusi viesti"/>
+                </form>
+            </section>
+        </main>
+    </body>
+</html>

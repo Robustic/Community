@@ -22,6 +22,9 @@ public class Profile extends AbstractPersistable<Long> {
     @OneToOne
     private Account account;
     
+    @OneToOne(mappedBy = "profile")
+    private ProfilePicture profilePicture;
+    
     @OneToMany(mappedBy = "profile")
     private List<Message> message = new ArrayList<>();
     
@@ -42,6 +45,9 @@ public class Profile extends AbstractPersistable<Long> {
     
     @OneToMany(mappedBy = "profile")
     private List<FileObject> fileObjects = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "profile")
+    private List<FileObjectComment> pictureComments = new ArrayList<>();
     
     public Profile(String name, String alias) {
         this.name = name;

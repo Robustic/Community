@@ -12,7 +12,10 @@
         <main>
             <section class="container">
                 <h3>Viestit</h3>
-                <div th:replace="fragments/layout :: messages(messages=${messages}, redirectvalue=profile, redirectcurrentprofile=${currentProfile})"></div>
+                <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, redirectvalue=profile, redirectcurrentprofile=${currentProfile})"></div>
+                <p></p>
+                <h3>Kuvat</h3>
+                <div th:replace="fragments/layout :: picturesfragment(allpictures=${pictures}, redirectvalue=profile, redirectcurrentprofile=${currentProfile})"></div>
             </section>            
         </main>
     </body>

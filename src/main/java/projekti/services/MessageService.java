@@ -17,6 +17,7 @@ import projekti.entities.Profile;
 import projekti.repositories.FollowingRepository;
 import projekti.repositories.MessageCommentRepository;
 import projekti.repositories.MessageRepository;
+import projekti.repositories.ProfileRepository;
 
 @Service
 public class MessageService {
@@ -29,6 +30,9 @@ public class MessageService {
     
     @Autowired
     private ProfileService profileService;
+    
+    @Autowired
+    private ProfileRepository profileRepository;
     
     @Autowired
     private FollowingRepository followingRepository;
@@ -56,14 +60,19 @@ public class MessageService {
     
     public void getMyMessages(Model model) {
         Profile profileUsedNow = profileService.findProfileForCurrentUser();
-        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias() + ", Omat viestit");
+        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias() + ", Omat viestit");        
+        getMessagesWithAlias(model, profileUsedNow.getAlias()); 
+    }
+    
+    public void getMessagesWithAlias(Model model, String alias) {
+        Profile profile = profileRepository.findByAlias(alias);
         
-        List<Following> followings = followingRepository.findByFollower(profileUsedNow);
+        List<Following> followings = followingRepository.findByFollower(profile);
         List<Profile> profiles = new ArrayList<>();
         for (Following following : followings) {
             profiles.add(following.getFollowed());
         }
-        profiles.add(profileUsedNow);
+        profiles.add(profile);
         Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
         model.addAttribute("messages", messageRepository.findByProfileIn(profiles, pageable)); 
     }

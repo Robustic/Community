@@ -22,6 +22,9 @@ public class AccountService {
     
     @Autowired
     ProfileService profileService;
+    
+    @Autowired
+    private ProfilePictureService profilePictureService;
 
     @Autowired
     PasswordEncoder passwordEncoder;
@@ -80,7 +83,8 @@ public class AccountService {
         Profile profile = new Profile(name, alias);
         Account accountFromDataBase = accountRepository.findByUsername(username);
         profile.setAccount(accountFromDataBase);
-        profileRepository.save(profile);
+        profile = profileRepository.save(profile);
+        profilePictureService.setDefaultProfilePictureForProfile(profile);
     }
     
     public boolean isUsernameReserved(String username) {

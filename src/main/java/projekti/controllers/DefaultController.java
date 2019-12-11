@@ -32,7 +32,7 @@ public class DefaultController {
     public String getOwnProfile() {
         return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias();
     }
-        
+            
 //    @GetMapping("/mymessages")
 //    public String getOwnProfileMessages() {
 //        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias() + "/messages";

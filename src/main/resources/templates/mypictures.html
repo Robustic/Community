@@ -1,0 +1,28 @@
+<!DOCTYPE HTML>
+<html xmlns="http://www.w3.org/1999/xhtml" xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="fragments/layout :: head(titletext='Community')">
+        <meta charset="UTF-8" />
+        <title>Title</title>
+    </head>
+    <body>
+        <div th:replace="fragments/layout :: navbar(currentProfile=${currentProfile})"></div>
+        <header class="container">
+            <h1 th:text="${profileheader}">Header</h1>
+        </header>
+        <main>            
+            <section class="container">
+                <h3>Lisää kuva</h3>
+                <form th:action="@{/mypictures/picture}" method="POST" enctype="multipart/form-data">
+                    <input type="file" name="file"/>
+                    <div class="form-group">
+                        <input type="text" name="text" class="form-control" placeholder="Kerro kuvasta" id="text"></input>
+                    </div>
+                    <input type="submit" class="btn btn-primary" value="Lähetä kuva"/>
+                </form>
+                <p></p>
+                <h3>Kuvani</h3>
+                <div th:replace="fragments/layout :: picturesfragment(allpictures=${pictures}, redirectvalue=mypictures, redirectcurrentprofile=${currentProfile})"></div>
+            </section>
+        </main>
+    </body>
+</html>

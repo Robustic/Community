@@ -26,53 +26,26 @@ public class MySettingsController {
     private ProfileService profileService;
 
     @Autowired
-    private MessageService messageService;
-
-    @Autowired
-    private BlockedService blockedService;
-    
-    @Autowired
-    private FileObjectRepository fileObjectRepository;    
+    private BlockedService blockedService; 
 
     @GetMapping("/mysettings")
-    public String getMyProfile(Model model) {
+    public String getMySettings(Model model) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
         profileService.getMySettings(model);        
         return "mysettings";
     }
-    
-    @PostMapping("/mysettings/newmessage")
-    public String addMessage(@RequestParam String text, 
-            @RequestParam String redirect, @RequestParam String aliastoredirect, @RequestParam Long redirectid) {
-        messageService.addMessage(text);
-        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect, redirectid);
-    }
 
     @PostMapping("/mysettings/{setblock}/setblock")
     public String setBlock(@PathVariable String setblock, 
-            @RequestParam String redirect, @RequestParam String aliastoredirect, @RequestParam Long redirectid) {
+            @RequestParam String redirect, @RequestParam String aliastoredirect) {
         blockedService.setBlock(setblock);
-        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect, redirectid);
+        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
     @PostMapping("/mysettings/{removeblock}/removeblock")
     public String removeBlock(@PathVariable String removeblock, 
-            @RequestParam String redirect, @RequestParam String aliastoredirect, @RequestParam Long redirectid) {
+            @RequestParam String redirect, @RequestParam String aliastoredirect) {
         blockedService.removeBlock(removeblock);
-        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect, redirectid);
-    }
-    
-    @PostMapping("/mysettings/files")
-    public String save(@RequestParam("file") MultipartFile file) throws IOException {
-        FileObject fo = new FileObject();
-
-        fo.setFilename(file.getOriginalFilename());
-        fo.setContentType(file.getContentType());
-        fo.setContentLength(file.getSize());
-        fo.setContent(file.getBytes());
-
-        fileObjectRepository.save(fo);
-
-        return "redirect:" + profileService.redirectWithParameters("mysettings", "", 0L);
+        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
 }

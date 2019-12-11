@@ -34,7 +34,6 @@
                                 <form method="POST" th:action="@{/profiles/{profiletoleavefollowing}/leavefollowing(profiletoleavefollowing=${following.followed.alias})}">
                                     <input type="hidden" name="redirect" th:value="mysettings"/>
                                     <input type="hidden" name="aliastoredirect" th:value="0"/>
-                                    <input type="hidden" name="redirectid" th:value="0"/>
                                     <input type="submit" class="btn btn-info" value="Peru seuraaminen"/>
                                 </form>
                             </td>
@@ -42,28 +41,8 @@
                     </div>
                 </table>                
             </section>            
-            
             <section class="container">
-                <h3>Ketkä seuraavat minua</h3>
-                <!-- <div th:each="following : ${whoAreFollowingMe}"> 
-                    <div class="row">
-                        <p class="col-2">
-                            <a th:text="${following.follower.name}">Name</a>
-                        </p>
-                        <p class="col-1">                        
-                            <a th:href="@{/profiles/{alias}(alias=${following.follower.alias})}" th:text="${following.follower.alias}">alias</a>
-                        </p>
-                        <p class="col-2">
-                            <a th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
-                        </p>
-                        <div class="col-7">
-                            <form th:action="@{/mysettings/{stopfollowerprofile}/stopfollower(stopfollowerprofile=${following.follower.alias})}" method="POST">
-                                <input type="hidden" name="redirect" value="mysettings"/>
-                                <input type="submit" value="Torju seuraaminen"/>
-                            </form>
-                        </div>
-                    </div>
-                </div> -->
+                <h3>Ketkä seuraavat minua</h3>                
                 <table class="table"> 
                     <div th:each="following : ${whoAreFollowingMe}">                                     
                         <tr>
@@ -80,7 +59,6 @@
                                 <form method="POST" th:action="@{/mysettings/{setblock}/setblock(setblock=${following.follower.alias})}">
                                     <input type="hidden" name="redirect" th:value="mysettings"/>
                                     <input type="hidden" name="aliastoredirect" th:value="0"/>
-                                    <input type="hidden" name="redirectid" th:value="0"/>
                                     <input type="submit" class="btn btn-danger" value="Torju seuraaminen"/>
                                 </form>
                             </td>
@@ -107,54 +85,13 @@
                                 <form method="POST" th:action="@{/mysettings/{removeblock}/removeblock(removeblock=${oneBlocked.blocked.alias})}">
                                     <input type="hidden" name="redirect" th:value="mysettings"/>
                                     <input type="hidden" name="aliastoredirect" th:value="0"/>
-                                    <input type="hidden" name="redirectid" th:value="0"/>
                                     <input type="submit" class="btn btn-warning" value="Poista blokkaus"/>
                                 </form>
                             </td>
                         </tr>                        
                     </div>
-                </table>  
-                <!-- <div th:each="oneBlocked : ${blockeds}"> 
-                    <div class="row">
-                        <p class="col-2">
-                            <a th:text="${oneBlocked.blocked.name}">Name</a>
-                        </p>
-                        <p class="col-1">                        
-                            <a th:href="@{/profiles/{alias}(alias=${oneBlocked.blocked.alias})}" th:text="${oneBlocked.blocked.alias}">alias</a>
-                        </p>
-                        <p class="col-2">
-                            <a th:text="${#temporals.format(oneBlocked.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
-                        </p>
-                        <div class="col-7">
-                            <form th:action="@{/mysettings/{removeblock}/removeblock(removeblock=${oneBlocked.blocked.alias})}" method="POST">
-                                <input type="hidden" name="redirect" value="mysettings"/>
-                                <input type="submit" value="Poista blokkaus"/>
-                            </form>
-                        </div>
-                    </div>
-                </div> -->
-            </section>
-            
-            <!-- <section class="container">
-                <h3>Viestini</h3>
-                <div th:replace="fragments/layout :: messages(messages=${messages}, redirectvalue=mysettings)"></div>
-                <!-- <form method="POST" th:action="@{/mysettings/newmessage}" action="/mysettings/newmessage">
-                    <input type="hidden" name="redirect" th:value="mysettings"/>
-                    <input type="hidden" name="aliastoredirect" th:value="0"/>
-                    <input type="hidden" name="redirectid" th:value="0"/>
-                    <input type="text" name="text"/>
-                    <input type="submit" value="Lähetä uusi viesti"/>
-                </form> -->                
-            <!--     <form method="POST" th:action="@{/mysettings/newmessage}" action="/mysettings/newmessage">
-                    <input type="hidden" name="redirect" th:value="mysettings"/>
-                    <input type="hidden" name="aliastoredirect" th:value="0"/>
-                    <input type="hidden" name="redirectid" th:value="0"/>
-                    <div class="form-group">
-                        <input type="text" name="text" class="form-control" placeholder="Kirjoita uusi viesti" id="comment"></input>
-                    </div>
-                    <input type="submit" class="btn btn-primary" value="Lähetä uusi viesti"/>
-                </form>
-            </section> -->
+                </table>               
+            </section>             
         </main>
     </body>
 </html>

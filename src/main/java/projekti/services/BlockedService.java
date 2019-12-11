@@ -43,6 +43,4 @@ public class BlockedService {
                 profileService.findProfileForCurrentUser(), profileToRemoveBlock);
         blockedRepository.delete(blockedToDelete);
     }
-    
-    
 }

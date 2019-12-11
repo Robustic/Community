@@ -16,7 +16,6 @@ import projekti.entities.Profile;
 import projekti.repositories.AccountRepository;
 import projekti.repositories.BlockedRepository;
 import projekti.repositories.FollowingRepository;
-import projekti.repositories.MessageRepository;
 import projekti.repositories.ProfileRepository;
 
 @Service
@@ -34,7 +33,10 @@ public class ProfileService {
     private FollowingRepository followingRepository;
     
     @Autowired
-    private MessageRepository messageRepository;
+    private MessageService messageService;
+    
+    @Autowired
+    private FileObjectService fileObjectService;
     
     public Profile findProfileForCurrentUser() {        
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
@@ -51,36 +53,40 @@ public class ProfileService {
         return profileRepository.findByAlias(alias) != null;
     }
     
-    public String redirectWithParameters(String redirect, String alias, Long id) {
+    public String redirectWithParameters(String redirect, String alias) {
         if (redirect.equals("profiles")) {
             return "/profiles";
+        }
+        if (redirect.equals("profilewithalias")) {
+            return "/profiles/" + alias;
         }
         if (redirect.equals("mysettings")) {
             return "/mysettings";
         }
-        if (redirect.equals("profile")) {
-            return "/profiles/" + alias;
+        if (redirect.equals("mymessages")) {
+            return "/mymessages";
         }
-        if (redirect.equals("messages")) {
+        if (redirect.equals("mypictures")) {
+            return "/mypictures";
+        }
+        if (redirect.equals("messageswithalias")) {
             return "/profiles/" + alias + "/messages";
         }
-        if (redirect.equals("pictures")) {
+        if (redirect.equals("pictureswithalias")) {
             return "/profiles/" + alias + "/pictures";
         }
         return "/";
     }
     
-    public void getProfileWithAlias(Model model, String profileAlias) {        
+    public Profile getProfileByAlias(String alias) {
+        return profileRepository.findByAlias(alias);
+    }
+    
+    public void getWallContentWithAlias(Model model, String profileAlias) {        
         Profile profile = profileRepository.findByAlias(profileAlias);
         model.addAttribute("profileheader", profile.getName() + " - " + profile.getAlias());
-        List<Following> followings = followingRepository.findByFollower(profile);
-        List<Profile> profiles = new ArrayList<>();
-        for (Following following : followings) {
-            profiles.add(following.getFollowed());
-        }
-        profiles.add(profile);
-        Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
-        model.addAttribute("messages", messageRepository.findByProfileIn(profiles, pageable));
+        messageService.getMessagesWithAlias(model, profileAlias);
+        fileObjectService.getPicturesWithAlias(model, profileAlias);
     }
     
     public void findProfilesWithString(Model model, String textToFind) {

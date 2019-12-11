@@ -60,7 +60,7 @@ public class MessageService {
     
     public void getMyMessages(Model model) {
         Profile profileUsedNow = profileService.findProfileForCurrentUser();
-        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias() + ", Omat viestit");        
+        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias());        
         getMessagesWithAlias(model, profileUsedNow.getAlias()); 
     }
     

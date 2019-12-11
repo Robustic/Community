@@ -27,6 +27,10 @@
                     border-radius: 4px;
                 }
                 H5 {display: inline;}
+                .thumbnail img {
+                    height:64px;
+                    object-fit: contain;
+                }
         </style>
     </head>
     <body>
@@ -49,7 +53,9 @@
                 <div class="customborder">
                     <div class="media">
                         <a class="mr-3">
-                            <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${picture.profile.alias},picture=${picture.profile.profilePicture.fileobject.filename})}" alt="${picture.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                            <div class="thumbnail">
+                                <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${picture.profile.alias},picture=${picture.profile.profilePicture.fileobject.filename})}" alt="${picture.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                            </div>
                         </a>
                         <div class="media-body">
                             <h5 class="mt-0" th:text="${picture.profile.name}">Name</h5>
@@ -74,7 +80,9 @@
                             </form>
                             <div class="media mt-3" th:each="pictureCommentti : ${picture.fileObjectComment}">
                                 <a class="mr-3">
-                                    <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${pictureCommentti.profile.alias},picture=${pictureCommentti.profile.profilePicture.fileobject.filename})}" alt="${pictureCommentti.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                                    <div class="thumbnail">
+                                        <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${pictureCommentti.profile.alias},picture=${pictureCommentti.profile.profilePicture.fileobject.filename})}" alt="${pictureCommentti.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                                    </div>
                                 </a>
                                 <div class="media-body">
                                     <h5 class="mt-0" th:text="${pictureCommentti.profile.name}">Name</h5>
@@ -92,11 +100,10 @@
             <div th:each="message : ${allmessages}">
                 <div class="customborder">
                     <div class="media">
-                        <!-- <a class="mr-3">
-                            <img src="/profilespictures/mickey/pictures/mikki.gif" alt="Mikki" class="rounded-circle"></img>
-                        </a> -->
                         <a class="mr-3">
-                            <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${message.profile.alias},picture=${message.profile.profilePicture.fileobject.filename})}" alt="${message.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                            <div class="thumbnail">
+                                <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${message.profile.alias},picture=${message.profile.profilePicture.fileobject.filename})}" alt="${message.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                            </div>
                         </a>
                         <div class="media-body">
                             <h5 class="mt-0" th:text="${message.profile.name}">Name</h5>
@@ -114,7 +121,9 @@
 
                             <div class="media mt-3" th:each="messageCommentti : ${message.messageComment}">
                                 <a class="mr-3">
-                                    <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${messageCommentti.profile.alias},picture=${messageCommentti.profile.profilePicture.fileobject.filename})}" alt="${messageCommentti.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                                    <div class="thumbnail">
+                                        <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${messageCommentti.profile.alias},picture=${messageCommentti.profile.profilePicture.fileobject.filename})}" alt="${messageCommentti.profile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                                    </div>
                                 </a>
                                 <div class="media-body">
                                     <h5 class="mt-0" th:text="${messageCommentti.profile.name}">Name</h5>

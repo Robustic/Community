@@ -72,7 +72,7 @@ public class FileObjectService {
     
     public void getMyPictures(Model model) {
         Profile profileUsedNow = profileService.findProfileForCurrentUser();
-        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias() + ", Omat kuvat");        
+        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias());        
         getPicturesWithAlias(model, profileUsedNow.getAlias()); 
     }
     

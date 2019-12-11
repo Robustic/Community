@@ -11,12 +11,23 @@
         </header>
         <main>
             <section class="container">
-                <h3>Viestit</h3>
+                <!-- <h3>Viestit</h3>
                 <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, redirectvalue=profile, redirectcurrentprofile=${currentProfile})"></div>
                 <p></p>
                 <h3>Kuvat</h3>
                 <div th:replace="fragments/layout :: picturesfragment(allpictures=${pictures}, redirectvalue=profile, redirectcurrentprofile=${currentProfile})"></div>
-            </section>            
+            -->
+            <div class="row">
+                <div class="col-md-6 form-group">
+                    <h3>Viestit</h3>
+                    <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, redirectvalue=profile, redirectcurrentprofile=${currentProfile})"></div>
+                </div>
+                <div class="col-md-6 form-group">
+                    <h3>Kuvat</h3>
+                    <div th:replace="fragments/layout :: picturesfragment(allpictures=${pictures}, redirectvalue=profile, redirectcurrentprofile=${currentProfile})"></div>
+                </div>
+                </div>
+            </section>
         </main>
     </body>
 </html>

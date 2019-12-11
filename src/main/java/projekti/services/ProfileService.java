@@ -69,6 +69,9 @@ public class ProfileService {
         if (redirect.equals("mypictures")) {
             return "/mypictures";
         }
+        if (redirect.equals("profile")) {
+            return "/profiles/" + alias;
+        }
         if (redirect.equals("messageswithalias")) {
             return "/profiles/" + alias + "/messages";
         }

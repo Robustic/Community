@@ -92,7 +92,7 @@ public class ProfileService {
         fileObjectService.getPicturesWithAlias(model, profileAlias);
     }
     
-    public void findProfilesWithString(Model model, String textToFind) {
+    public void findProfilesWithString(Model model, String textToFind) {        
         Profile currentProfile = findProfileForCurrentUser();
         Pageable pageable = PageRequest.of(0, 25, Sort.by("name").ascending());
         model.addAttribute("findedProfiles", profileRepository.findByNameContainingAndAliasNot(textToFind, currentProfile.getAlias(), pageable));

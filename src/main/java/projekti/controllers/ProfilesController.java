@@ -8,6 +8,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import projekti.entities.Profile;
 import projekti.services.ProfileService;
 
 
@@ -21,6 +22,8 @@ public class ProfilesController {
     public String find(Model model, @ModelAttribute("oldTextToFind") String oldTextToFind) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
         model.addAttribute("showProfile", profileService.findProfileForCurrentUser());
+        Profile profile = profileService.findProfileForCurrentUser();
+        model.addAttribute("profileheader", profile.getName() + " - " + profile.getAlias());
         if (!oldTextToFind.equals("")) {
             profileService.findProfilesWithString(model, oldTextToFind);
         }

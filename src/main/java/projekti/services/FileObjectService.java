@@ -61,7 +61,7 @@ public class FileObjectService {
                 if (profiles[0].equals("test")) {
                     filename = "default.png";
                 } else {
-                    filename = "src/main/resources/default.png";
+                    filename = "~/src/main/resources/default.png";
                 }
             }
             Long size = 1693L;

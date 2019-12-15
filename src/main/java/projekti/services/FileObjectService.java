@@ -53,17 +53,16 @@ public class FileObjectService {
     public void readDefaultFile() {
         FileObject fileObject = fileObjectRepository.findByProfileIsNullAndFilename("default.png");
         if (fileObject == null) {
-//            String filename = "default.png";
             String filename = "";
-//            String[] profiles = enviroment.getActiveProfiles();
+            String[] profiles = enviroment.getActiveProfiles();
             filename = "default.png";
-//            if (profiles.length > 0) {
-//                if (profiles[0].equals("test")) {
-//                    filename = "default.png";
-//                } else {
-//                    filename = "/app/src/main/resources/default.png";
-//                }
-//            }
+            if (profiles.length > 0) {
+                if (profiles[0].equals("test")) {
+                    filename = "default.png";
+                } else {
+                    filename = "~/app/src/main/resources/default.png";
+                }
+            }
             Long size = 1693L;
             String contentType = "image/png";
             String description = "default";

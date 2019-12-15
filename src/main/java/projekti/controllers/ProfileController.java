@@ -61,4 +61,18 @@ public class ProfileController {
         fileObjectService.addCommentToFileObject(profileAlias, id, comment);
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
+    
+    @PostMapping("/profiles/{alias}/messages/{id}/like")
+    public String addLikeToMessage(@PathVariable String alias, @PathVariable Long id,
+            @RequestParam String redirect, @RequestParam String aliastoredirect) {
+        messageService.addLikeToMessage(alias, id);
+        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
+    }
+    
+    @PostMapping("/profiles/{alias}/pictures/{id}/like")
+    public String addLikeToFileObject(@PathVariable String alias, @PathVariable Long id,
+            @RequestParam String redirect, @RequestParam String aliastoredirect) {
+        fileObjectService.addLikeToFileObject(alias, id);
+        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
+    }
 }

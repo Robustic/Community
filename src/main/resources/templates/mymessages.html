@@ -11,7 +11,7 @@
         </header>
         <main>            
             <section class="container">
-                <h3>Lisää kuva</h3>                       
+                <h3>Lisää viesti</h3>                       
                 <form method="POST" th:action="@{/mymessages/newmessage}" action="/mymessages/newmessage">
                     <input type="hidden" name="redirect" value="mymessages"/>
                     <input type="hidden" name="aliastoredirect" value="0"/>
@@ -22,7 +22,7 @@
                 </form>
                 <p></p>
                 <h3>Viestini</h3> 
-                <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, redirectvalue=mymessages, redirectcurrentprofile=${currentProfile})"></div>
+                <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, messagesforpersonlikes=${messagesforpersonlikes}, redirectvalue=mymessages, redirectcurrentprofile=${currentProfile})"></div>
             </section>
         </main>
     </body>

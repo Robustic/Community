@@ -13,9 +13,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import projekti.entities.Following;
 import projekti.entities.Message;
 import projekti.entities.MessageComment;
+import projekti.entities.MessageLike;
 import projekti.entities.Profile;
 import projekti.repositories.FollowingRepository;
 import projekti.repositories.MessageCommentRepository;
+import projekti.repositories.MessageLikeRepository;
 import projekti.repositories.MessageRepository;
 import projekti.repositories.ProfileRepository;
 
@@ -27,6 +29,9 @@ public class MessageService {
     
     @Autowired
     private MessageCommentRepository messageCommentRepository;
+    
+    @Autowired
+    private MessageLikeRepository messageLikeRepository;
     
     @Autowired
     private ProfileService profileService;
@@ -45,6 +50,16 @@ public class MessageService {
         messageComment.setProfile(profileService.findProfileForCurrentUser());
         messageComment.setLocalDateTime(LocalDateTime.now());
         messageCommentRepository.save(messageComment);
+    }
+    
+    public void addLikeToMessage(String profileAlias, Long id) {  
+        System.out.println("profileAlias:" + profileAlias);
+        System.out.println("id:" + id);
+        Message message = messageRepository.getOne(id);   
+        MessageLike messageLike = new MessageLike();
+        messageLike.setMessage(message);
+        messageLike.setProfile(profileService.findProfileForCurrentUser());
+        messageLikeRepository.save(messageLike);
     }
     
     public void addMessage(String text) {
@@ -66,7 +81,7 @@ public class MessageService {
     
     public void getMessagesWithAlias(Model model, String alias) {
         Profile profile = profileRepository.findByAlias(alias);
-        
+        Profile profileUsedNow = profileService.findProfileForCurrentUser();
         List<Following> followings = followingRepository.findByFollower(profile);
         List<Profile> profiles = new ArrayList<>();
         for (Following following : followings) {
@@ -74,6 +89,11 @@ public class MessageService {
         }
         profiles.add(profile);
         Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
-        model.addAttribute("messages", messageRepository.findByProfileIn(profiles, pageable)); 
+        model.addAttribute("messages", messageRepository.findByProfileIn(profiles, pageable));
+        List<Message> messages = new ArrayList<>();
+        for (MessageLike messageLike : messageLikeRepository.findByProfile(profileUsedNow)) {
+            messages.add(messageLike.getMessage());
+        }
+        model.addAttribute("messagesforpersonlikes", messages);
     }
 }

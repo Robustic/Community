@@ -27,10 +27,11 @@
                     border-radius: 4px;
                 }
                 H5 {display: inline;}
+                H6 {color: green}
                 .thumbnail img {
                     height:64px;
                     object-fit: contain;
-                }
+                }                
         </style>
     </head>
     <body>
@@ -48,7 +49,7 @@
             </nav>
         </div>
         <div>TODO write content</div>
-        <div th:fragment="picturesfragment(allpictures, redirectvalue, redirectcurrentprofile)">
+        <div th:fragment="picturesfragment(allpictures, picturesforpersonlikes, redirectvalue, redirectcurrentprofile)">
             <div th:each="picture : ${allpictures}">
                 <div class="customborder">
                     <div class="media">
@@ -63,13 +64,28 @@
                             <a th:text="${#temporals.format(picture.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                             <p th:text="${picture.description}">description</p>
                             <img th:src="@{/profiles/{alias}/pictures/{picture}(alias=${picture.profile.alias},picture=${picture.filename})}" alt="${picture.filename}"></img>
-                            <div th:if="${redirectvalue == 'mypictures'}">  
-                                <form method="POST" th:action="@{/profiles/{alias}/setprofilepicture/{picid}(alias=${picture.profile.alias}, picid=${picture.id})}">
-                                    <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
-                                    <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
-                                    <input type="submit" class="btn btn-info" value="Aseta profiilikuvaksi"/>
-                                </form>   
+                            <div th:if="${redirectvalue == 'mypictures'}">
+                                <div th:if="${redirectcurrentprofile == picture.profile}">
+                                    <form method="POST" th:action="@{/profiles/{alias}/setprofilepicture/{picid}(alias=${picture.profile.alias}, picid=${picture.id})}">
+                                        <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                        <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
+                                        <input type="submit" class="btn btn-info" value="Aseta profiilikuvaksi"/>
+                                    </form>   
+                                </div>
                             </div>
+                            <h6>
+                                <div th:unless="${#lists.contains(picturesforpersonlikes, picture)}">
+                                    <div th:unless="${redirectcurrentprofile == picture.profile}">
+                                        <form method="POST" th:action="@{/profiles/{alias}/pictures/{id}/like(alias=${picture.profile.alias}, id=${picture.id})}">
+                                            <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                            <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
+                                            <input type="submit" class="btn btn-success" value="Tykkää kuvasta"/>
+                                        </form>
+                                    </div>
+                                </div>
+                                <span th:text="${#lists.size(picture.fileObjectLike)}">likes</span>
+                                <a> tykkää tästä kuvasta</a>
+                            </h6>
                             <form method="POST" th:action="@{/profiles/{alias}/commentpicture/{id}(alias=${picture.profile.alias}, id=${picture.id})}">
                                 <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
                                 <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
@@ -90,13 +106,13 @@
                                     <a th:text="${#temporals.format(pictureCommentti.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                                     <p th:text="${pictureCommentti.comment}">comment</p>
                                 </div>
-                            </div>
+                            </div> 
                         </div>
-                    </div>                    
+                    </div>                 
                 </div>
             </div>
         </div>
-        <div th:fragment="messagesfragment(allmessages, redirectvalue, redirectcurrentprofile)">
+        <div th:fragment="messagesfragment(allmessages, messagesforpersonlikes, redirectvalue, redirectcurrentprofile)">
             <div th:each="message : ${allmessages}">
                 <div class="customborder">
                     <div class="media">
@@ -110,6 +126,19 @@
                             <a th:href="@{/profiles/{alias}(alias=${message.profile.alias})}" th:text="${message.profile.alias}">alias</a>
                             <a th:text="${#temporals.format(message.localDateTime, 'dd-MM-yyyy HH:mm')}"></a>
                             <p th:text="${message.text}">text</p>
+                            <h6>
+                                <div th:unless="${#lists.contains(messagesforpersonlikes, message)}">
+                                    <div th:unless="${redirectcurrentprofile == message.profile}">
+                                        <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/like(alias=${message.profile.alias}, id=${message.id})}">
+                                            <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                            <input type="hidden" name="aliastoredirect" th:value="${message.profile.alias}"/>
+                                            <input type="submit" class="btn btn-success" value="Tykkää viestistä"/>
+                                        </form>
+                                    </div>
+                                </div>
+                                <span th:text="${#lists.size(message.messageLike)}">likes</span>
+                                <a> tykkää tästä viestistä</a>
+                            </h6>                            
                             <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comment(alias=${message.profile.alias}, id=${message.id})}">
                                 <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
                                 <input type="hidden" name="aliastoredirect" th:value="${message.profile.alias}"/>

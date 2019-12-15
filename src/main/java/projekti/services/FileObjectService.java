@@ -14,9 +14,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import projekti.entities.FileObject;
 import projekti.entities.FileObjectComment;
+import projekti.entities.FileObjectLike;
 import projekti.entities.Following;
 import projekti.entities.Profile;
 import projekti.repositories.FileObjectCommentRepository;
+import projekti.repositories.FileObjectLikeRepository;
 import projekti.repositories.FileObjectRepository;
 import projekti.repositories.FollowingRepository;
 
@@ -28,6 +30,9 @@ public class FileObjectService {
     
     @Autowired
     private FileObjectCommentRepository fileObjectCommentRepository;
+    
+    @Autowired
+    private FileObjectLikeRepository fileObjectLikeRepository;
     
     @Autowired
     private ProfileService profileService;
@@ -76,9 +81,17 @@ public class FileObjectService {
         getPicturesWithAlias(model, profileUsedNow.getAlias()); 
     }
     
+    public void addLikeToFileObject(String profileAlias, Long id) {
+        FileObject fileObject = fileObjectRepository.getOne(id);   
+        FileObjectLike fileObjectLike = new FileObjectLike();
+        fileObjectLike.setFileObject(fileObject);
+        fileObjectLike.setProfile(profileService.findProfileForCurrentUser());
+        fileObjectLikeRepository.save(fileObjectLike);
+    }
+    
     public void getPicturesWithAlias(Model model, String alias) {
         Profile profile = profileService.getProfileByAlias(alias);
-        
+        Profile profileUsedNow = profileService.findProfileForCurrentUser();
         List<Following> followings = followingRepository.findByFollower(profile);
         List<Profile> profiles = new ArrayList<>();
         for (Following following : followings) {
@@ -87,6 +100,11 @@ public class FileObjectService {
         profiles.add(profile);
         Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
         model.addAttribute("pictures", fileObjectRepository.findByProfileIn(profiles, pageable)); 
+        List<FileObject> fileObjects = new ArrayList<>();
+        for (FileObjectLike fileObjectLike : fileObjectLikeRepository.findByProfile(profileUsedNow)) {
+            fileObjects.add(fileObjectLike.getFileObject());
+        }
+        model.addAttribute("picturesforpersonlikes", fileObjects);
     }
         
     public void addCommentToFileObject(String profileAlias, Long id, String comment) {
@@ -96,6 +114,6 @@ public class FileObjectService {
         fileObjectComment.setFileobject(fileObject);
         fileObjectComment.setProfile(profileService.findProfileForCurrentUser());
         fileObjectComment.setLocalDateTime(LocalDateTime.now());
-        fileObjectCommentRepository.save(fileObjectComment);
+        fileObjectCommentRepository.save(fileObjectComment);        
     }
 }

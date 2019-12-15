@@ -29,4 +29,6 @@ public class Message extends AbstractPersistable<Long> {
     @OneToMany(mappedBy = "message")
     private List<MessageComment> messageComment = new ArrayList<>();
     
+    @OneToMany(mappedBy = "message")
+    private List<MessageLike> messageLike = new ArrayList<>();
 }

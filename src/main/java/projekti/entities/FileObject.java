@@ -41,4 +41,7 @@ public class FileObject extends AbstractPersistable<Long> {
     
     @OneToMany(mappedBy = "fileobject")
     private List<FileObjectComment> fileObjectComment = new ArrayList<>();
+    
+    @OneToMany(mappedBy = "fileObject")
+    private List<FileObjectLike> fileObjectLike = new ArrayList<>();
 }

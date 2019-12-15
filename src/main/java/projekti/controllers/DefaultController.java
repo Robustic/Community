@@ -32,19 +32,4 @@ public class DefaultController {
     public String getOwnProfile() {
         return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias();
     }
-            
-//    @GetMapping("/mymessages")
-//    public String getOwnProfileMessages() {
-//        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias() + "/messages";
-//    }
-//    
-//    @GetMapping("/mypictures")
-//    public String getOwnProfilePictures() {
-//        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias() + "/pictures";
-//    }
-//    
-//    @GetMapping("/mysettings")
-//    public String getOwnProfileSettings() {
-//        return "redirect:/profiles/" + profileService.findProfileForCurrentUser().getAlias() + "/settings";
-//    }
 }

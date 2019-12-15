@@ -5,34 +5,51 @@
         <title>Title</title>
     </head>
     <body>
+        <div th:fragment="navbar(currentProfile)">
+            <nav class="navbar navbar-expand-lg navbar-light bg-light">                
+                <div th:if="${currentProfile}">
+                    <div th:replace="fragments/layout :: navbar(currentProfile=${currentProfile})"></div>
+                </div>
+                <div th:if="${noprofile}">
+                    <div th:replace="fragments/layout :: navbarcreateaccount(noprofile=${noprofile})"></div>
+                </div>
+            </nav>
+        </div>
         <header class="container">
             <h1>Tervetuloa Community verkostoitumissovellukseen</h1>
             <p>Communityn käyttö vaatii rekisteröitymisen.</p>
-            <p>Rekisteröitymistä varten voit luoda uuden tunnuksen alla.</p>
-            <p>Jos olet jo rekisteröitynyt, voit kirjautua ohessa olevan Login linkin kautta.</p>            
-            <div th:if="${messagesuccess}" th:text="${messagesuccess}" th:class="${'alert ' + alertClass}"/>
-            <p><a th:href="@{/login}">Login - Kirjaudu sisään</a></p>
+            <div th:if="${currentProfile}">
+                <p>Olet jo kirjautunut sisään.</p>
+            </div>
+            <div th:if="${noprofile}">
+                <p>Rekisteröitymistä varten voit luoda uuden tunnuksen alla.</p>
+                <p>Jos olet jo rekisteröitynyt, voit kirjautua ohessa olevan Login linkin kautta.</p>            
+                <div th:if="${messagesuccess}" th:text="${messagesuccess}" th:class="${'alert ' + alertClass}"/>
+                <p><a th:href="@{/login}">Login - Kirjaudu sisään</a></p>
+            </div>
         </header>
         <main>
-            <section class="container">
-                <p>&nbsp;</p>
-                <h2>Luo uusi tunnus</h2>
-                <p>Luo uusi tunnus, jolla voit kirjautua järjestelmään.</p>
-            </section>
+            <div th:if="${noprofile}">
+                <section class="container">
+                    <p>&nbsp;</p>
+                    <h2>Luo uusi tunnus</h2>
+                    <p>Luo uusi tunnus, jolla voit kirjautua järjestelmään.</p>
+                </section>
 
-            <section class="container"> 
-                <form method="POST" action="/createnewaccount">
-                    <input name="username" type="text" class="form-control mb-2 mr-sm-2" placeholder="Uusi käyttäjätunnus" id="username">
-                        <div th:if="${messageusername}" th:text="${messageusername}" th:class="${'alert ' + alertClass}"/>
-                    <input name="password" type="password" class="form-control mb-2 mr-sm-2" placeholder="Salasana" id="password">
-                        <div th:if="${messagepassword}" th:text="${messagepassword}" th:class="${'alert ' + alertClass}"/>
-                    <input name="name" type="text" class="form-control mb-2 mr-sm-2" placeholder="Nimi" id="name">
-                        <div th:if="${messagename}" th:text="${messagename}" th:class="${'alert ' + alertClass}"/>
-                    <input name="alias" type="text" class="form-control mb-2 mr-sm-2" placeholder="Alias" id="alias">
-                        <div th:if="${messagealias}" th:text="${messagealias}" th:class="${'alert ' + alertClass}"/>
-                    <button name="submit" type="submit" class="btn btn-primary">Luo uusi käyttäjätunnus</button>
-                </form>
-            </section>
+                <section class="container"> 
+                    <form method="POST" action="/createnewaccount">
+                        <input name="username" type="text" class="form-control mb-2 mr-sm-2" placeholder="Uusi käyttäjätunnus" id="username">
+                            <div th:if="${messageusername}" th:text="${messageusername}" th:class="${'alert ' + alertClass}"/>
+                        <input name="password" type="password" class="form-control mb-2 mr-sm-2" placeholder="Salasana" id="password">
+                            <div th:if="${messagepassword}" th:text="${messagepassword}" th:class="${'alert ' + alertClass}"/>
+                        <input name="name" type="text" class="form-control mb-2 mr-sm-2" placeholder="Nimi" id="name">
+                            <div th:if="${messagename}" th:text="${messagename}" th:class="${'alert ' + alertClass}"/>
+                        <input name="alias" type="text" class="form-control mb-2 mr-sm-2" placeholder="Alias" id="alias">
+                            <div th:if="${messagealias}" th:text="${messagealias}" th:class="${'alert ' + alertClass}"/>
+                        <button name="submit" type="submit" class="btn btn-primary">Luo uusi käyttäjätunnus</button>
+                    </form>
+                </section>
+            </div>
         </main>
     </body>
 </html>

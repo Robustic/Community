@@ -1,5 +1,6 @@
 package projekti.controllers;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,10 +31,12 @@ public class ProfileController {
     @GetMapping("/profiles/{profileAlias}")
     public String getWallContentWithAlias(Model model, @PathVariable String profileAlias) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
+        model.addAttribute("showProfile", profileService.getProfileByAlias(profileAlias));
         profileService.getWallContentWithAlias(model, profileAlias);
         return "profile";
     }
     
+    @Transactional
     @PostMapping("/profiles/{profiletofollow}/tofollow")
     public String addFollowed(@PathVariable String profiletofollow, 
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
@@ -41,6 +44,7 @@ public class ProfileController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
 
+    @Transactional
     @PostMapping("/profiles/{profiletoleavefollowing}/leavefollowing")
     public String deleteFollowed(@PathVariable String profiletoleavefollowing, 
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
@@ -48,6 +52,7 @@ public class ProfileController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
+    @Transactional
     @PostMapping("/profiles/{profileAlias}/messages/{id}/comment")
     public String addCommentToMessage(@PathVariable String profileAlias, @PathVariable Long id, @RequestParam String comment, 
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
@@ -55,6 +60,7 @@ public class ProfileController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
+    @Transactional
     @PostMapping("/profiles/{profileAlias}/pictures/{id}/comment")
     public String addCommentToFileObject(@PathVariable String profileAlias, @PathVariable Long id, @RequestParam String comment, 
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
@@ -62,6 +68,7 @@ public class ProfileController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
+    @Transactional
     @PostMapping("/profiles/{alias}/messages/{id}/like")
     public String addLikeToMessage(@PathVariable String alias, @PathVariable Long id,
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
@@ -69,6 +76,7 @@ public class ProfileController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
+    @Transactional
     @PostMapping("/profiles/{alias}/pictures/{id}/like")
     public String addLikeToFileObject(@PathVariable String alias, @PathVariable Long id,
             @RequestParam String redirect, @RequestParam String aliastoredirect) {

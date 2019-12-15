@@ -4,11 +4,23 @@
         <meta charset="UTF-8" />
         <title>Title</title>
     </head>
-    <body>
+    <body>        
         <div th:replace="fragments/layout :: navbar(currentProfile=${currentProfile})"></div>
         <header class="container">
-            <h1 th:text="${profileheader}">Header</h1>
+            <div class="media">
+                <a class="mr-3">
+                    <div class="thumbnail">
+                        <img th:src="@{/profiles/{alias}/pictures/{pictureid}(alias=${showProfile.alias},pictureid=${showProfile.profilePicture.fileobject.id})}" alt="${showProfile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                    </div>
+                </a>
+                <div class="media-body">
+                    <header class="container">
+                        <h1 class="mt-0" th:text="${profileheader}">Header</h1>
+                    </header>
+                </div>                
+            </div>
         </header>
+        
         <main>
             <section class="container">
                 <!-- <h3>Viestit</h3>

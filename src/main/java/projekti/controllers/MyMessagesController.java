@@ -1,5 +1,6 @@
 package projekti.controllers;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -21,10 +22,12 @@ public class MyMessagesController {
     @GetMapping("/mymessages")
     public String getMyMessages(Model model) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
+        model.addAttribute("showProfile", profileService.findProfileForCurrentUser());
         messageService.getMyMessages(model);
         return "mymessages";
     }
     
+    @Transactional
     @PostMapping("/mymessages/newmessage")
     public String addMessage(@RequestParam String text, 
             @RequestParam String redirect, @RequestParam String aliastoredirect) {

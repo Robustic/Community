@@ -4,9 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.services.ProfileService;
+
 
 @Controller
 public class ProfilesController {
@@ -14,23 +17,21 @@ public class ProfilesController {
     @Autowired
     private ProfileService profileService;
 
-    String textToFind = "";
-
     @GetMapping("/profiles")
-    public String find(Model model) {
+    public String find(Model model, @ModelAttribute("oldTextToFind") String oldTextToFind) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
-        if (!textToFind.equals("")) {
-            profileService.findProfilesWithString(model, textToFind);
-            model.addAttribute("oldText", textToFind);
-            textToFind = "";
+        model.addAttribute("showProfile", profileService.findProfileForCurrentUser());
+        if (!oldTextToFind.equals("")) {
+            profileService.findProfilesWithString(model, oldTextToFind);
         }
         return "profiles";
     }
 
     @PostMapping("/profiles")
-    public String add(@RequestParam String findtext) {
+    public String findtext(@RequestParam String findtext, RedirectAttributes redirectAttributes) {
         if (findtext != null) {
-            textToFind = findtext.trim();
+            String textToFind = findtext.trim();
+            redirectAttributes.addFlashAttribute("oldTextToFind", textToFind);
         }
         return "redirect:/profiles";
     }

@@ -1,7 +1,7 @@
 package projekti.controllers;
 
 import java.io.IOException;
-import java.time.LocalDateTime;
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -43,6 +43,7 @@ public class FilesController {
         return "files";
     }
 
+    @Transactional
     @PostMapping("/defaultfiles/defaultpicture")
     public String savePicture(@RequestParam("file") MultipartFile file, @RequestParam String text) {
         try {

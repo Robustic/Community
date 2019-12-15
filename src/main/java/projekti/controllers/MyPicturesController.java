@@ -1,5 +1,6 @@
 package projekti.controllers;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -32,22 +33,25 @@ public class MyPicturesController {
     @Autowired
     private ProfilePictureService profilePictureService;
     
+    @Autowired
+    private FileObjectRepository fileObjectRepository;  
+    
     @GetMapping("/mypictures")
     public String getMyPictures(Model model) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
+        model.addAttribute("showProfile", profileService.findProfileForCurrentUser());
         fileObjectService.getMyPictures(model);
         return "mypictures";
     }
     
+    @Transactional
     @PostMapping("/mypictures/picture")
     public String savePicture(@RequestParam("file") MultipartFile file, @RequestParam String text) {
         fileObjectService.savePicture(file, text);
         return "redirect:/mypictures";
     }    
-    
-    @Autowired
-    private FileObjectRepository fileObjectRepository;  
-    
+        
+    @Transactional
     @PostMapping("/profiles/{alias}/setprofilepicture/{picid}")
     public String setProfilePicture(@PathVariable String alias, @PathVariable Long picid,
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
@@ -55,6 +59,7 @@ public class MyPicturesController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
+    @Transactional
     @PostMapping("/profiles/{alias}/deletepicture/{picid}")
     public String deletePicture(@PathVariable String alias, @PathVariable Long picid,
             @RequestParam String redirect, @RequestParam String aliastoredirect, RedirectAttributes redirectAttributes) {
@@ -64,6 +69,7 @@ public class MyPicturesController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
+    @Transactional
     @PostMapping("/profiles/{alias}/deletepicturereally/{picid}")
     public String deletePictureReally(@PathVariable String alias, @PathVariable Long picid,
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
@@ -71,10 +77,10 @@ public class MyPicturesController {
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
-    @GetMapping("/profiles/{alias}/pictures/{picture}")
-    public ResponseEntity<byte[]> viewFile(@PathVariable String alias, @PathVariable String picture) {
+    @GetMapping("/profiles/{alias}/pictures/{pictureid}")
+    public ResponseEntity<byte[]> viewFileWithId(@PathVariable String alias, @PathVariable Long pictureid) {
         Profile profile = profileService.getProfileByAlias(alias);        
-        FileObject fileObject = fileObjectRepository.findByFilenameAndProfile(picture, profile);
+        FileObject fileObject = fileObjectRepository.getOne(pictureid);
         if (fileObject == null) {
             fileObject = fileObjectRepository.findByProfileIsNullAndFilename("default.png");
         }
@@ -85,6 +91,7 @@ public class MyPicturesController {
         return new ResponseEntity<>(fileObject.getContent(), headers, HttpStatus.CREATED);        
     }
     
+    @Transactional
     @PostMapping("/profiles/{alias}/commentpicture/{id}")
     public String addCommentToMessage(@PathVariable String alias, @PathVariable Long id, @RequestParam String comment, 
             @RequestParam String redirect, @RequestParam String aliastoredirect) {

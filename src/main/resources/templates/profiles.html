@@ -8,7 +8,18 @@
     <body>
         <div th:replace="fragments/layout :: navbar(currentProfile=${currentProfile})"></div>
         <header class="container">
-            <h1>Etsi uusia seurattavia käyttäjiä</h1>
+            <div class="media">
+                <a class="mr-3">
+                    <div class="thumbnail">
+                        <img th:src="@{/profiles/{alias}/pictures/{pictureid}(alias=${showProfile.alias},pictureid=${showProfile.profilePicture.fileobject.id})}" alt="${showProfile.profilePicture.fileobject.filename}" class="rounded-circle"></img>
+                    </div>
+                </a>
+                <div class="media-body">
+                    <header class="container">
+                        <h1>Etsi uusia seurattavia käyttäjiä</h1>
+                    </header>
+                </div>                
+            </div>
         </header>        
         <main>
             <section class="container">
@@ -18,7 +29,12 @@
             <section class="container">
                 <form method="POST" th:action="@{/profiles}" action="/profiles">
                     <div class="form-group">
-                        <input type="text" name="findtext" class="form-control" placeholder="Etsi" id="findtext"></input>
+                        <div th:if="${oldTextToFind}">
+                            <input type="text" name="findtext" class="form-control" placeholder="Etsi" id="findtext" th:value="${oldTextToFind}"></input>
+                        </div>
+                        <div th:unless="${oldTextToFind}">
+                            <input type="text" name="findtext" class="form-control" placeholder="Etsi" id="findtext"></input>
+                        </div>
                     </div>
                     <button name="submit" type="submit" class="btn btn-primary">Etsi</button>
                 </form>

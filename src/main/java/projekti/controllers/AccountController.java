@@ -31,7 +31,7 @@ public class AccountController {
 
     @GetMapping("/createnewaccount")
     public String index(Model model) {
-        fileObjectService.readDefaultFile();
+        // fileObjectService.readDefaultFile();
         Profile currentProfile = profileService.findProfileForCurrentUser();
         if (currentProfile != null) {
             model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());

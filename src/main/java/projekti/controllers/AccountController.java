@@ -11,18 +11,27 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.entities.Profile;
 import projekti.services.AccountService;
 import projekti.services.ProfileService;
+import projekti.repositories.FileObjectRepository;
+import projekti.services.FileObjectService;
 
 @Controller
 public class AccountController {
-    
+
     @Autowired
     AccountService accountService;
-    
+
     @Autowired
     ProfileService profileService;
+    
+    @Autowired
+    FileObjectRepository fileObjectRepository;
+    
+    @Autowired
+    FileObjectService fileObjectService;
 
     @GetMapping("/createnewaccount")
     public String index(Model model) {
+        fileObjectService.readDefaultFile();
         Profile currentProfile = profileService.findProfileForCurrentUser();
         if (currentProfile != null) {
             model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
@@ -36,13 +45,13 @@ public class AccountController {
     @Transactional
     @PostMapping("/createnewaccount")
     public String createnewaccount(
-            @RequestParam String username, 
+            @RequestParam String username,
             @RequestParam String password,
-            @RequestParam String name, 
+            @RequestParam String name,
             @RequestParam String alias,
             RedirectAttributes redirectAttributes
     ) {
         accountService.createNewAccount(username, password, name, alias, redirectAttributes);
-        return "redirect:/createnewaccount";        
+        return "redirect:/createnewaccount";
     }
 }

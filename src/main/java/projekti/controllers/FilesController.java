@@ -55,6 +55,8 @@ public class FilesController {
             
             fo.setDescription(text);
             
+            
+            
             fo.setContent(file.getBytes());
 
             fileObjectRepository.save(fo);

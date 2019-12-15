@@ -20,33 +20,26 @@ public class AccountControllerTest extends org.fluentlenium.adapter.junit.Fluent
     @Test
     public void fillEditDialog() throws InterruptedException {         
         goTo("http://localhost:" + port + "/createnewaccount");
-        // Varmistetaan ettei ilmoittautuneissa ole Rollea
-//        assertFalse(pageSource().contains("Rolle"));
 
-        // Etsi kenttä, jonka attribuutin 'id' arvo on nimi ja täytä kentän arvoksi Rolle
-        find("#username").fill().with("Rolle");
-        find("#password").fill().with("xxxxx");
+        find("#username").fill().with("rolle");
+        find("#password").fill().with("xxxxxxxxxx");
         find("#name").fill().with("Rolle Rol");
         find("#alias").fill().with("relaa");
 
-        // Lähetä lomake
         find("form").first().submit();
         
-//        // Varmista, että sivulle on lisätty Rolle
-//        assertTrue(pageSource().contains("Login"));
-//        
+        assertTrue(pageSource().contains("Login"));
+        
         find("a", containingText("Login - Kirjaudu sisään")).click();
         
-//        assertTrue(pageSource().contains("Login"));
-        find("#username").fill().with("Rolle");
-        find("#password").fill().with("xxxxx");
+        assertTrue(pageSource().contains("Login"));
+        find("#username").fill().with("rolle");
+        find("#password").fill().with("xxxxxxxxxx");
         
         find("button").first().submit();
         
-        Thread.sleep(500);
-        
-//        assertTrue(pageSource().contains("Rolle Rol - relaa"));
-//        assertTrue(pageSource().contains("Etsi syöttämällä kokonaan tai osa haettavasta nimestä."));
+        assertTrue(pageSource().contains("Rolle Rol - relaa"));
+        assertTrue(pageSource().contains("Etsi syöttämällä kokonaan tai osa haettavasta nimestä."));
     }
     
 }

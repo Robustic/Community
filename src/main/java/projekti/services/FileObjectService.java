@@ -1,6 +1,9 @@
 package projekti.services;
 
 import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
@@ -43,6 +46,29 @@ public class FileObjectService {
     @Autowired
     private FollowingRepository followingRepository;
 
+    public void readDefaultFile() {
+        FileObject fileObject = fileObjectRepository.findByProfileIsNullAndFilename("default.png");        
+        if (fileObject == null) {
+            String filename = "default.png";
+            Long size = 1693L;
+            String contentType = "image/png";
+            String description = "default";
+            try {
+                FileObject fo = new FileObject();
+                fo.setFilename(filename);
+                fo.setContentType(contentType);
+                fo.setContentLength(size);
+                fo.setDescription(description);
+                
+                Path path = Paths.get(getClass().getClassLoader().getResource(filename).toURI());
+                fo.setContent(Files.readAllBytes(path));
+                fileObjectRepository.save(fo);
+            } catch (Exception e) {
+                System.out.println(e);
+            }
+        }
+    }
+
     public FileObject copyFileObjectForProfile(FileObject fileObject, Profile profile) {
         FileObject newFileObject = new FileObject();
 
@@ -57,7 +83,7 @@ public class FileObjectService {
 
         return newFileObject;
     }
-    
+
     public int countPicturesForCurrentUser() {
         Profile currentProfile = profileService.findProfileForCurrentUser();
         List<FileObject> fileObjects = fileObjectRepository.findByProfile(currentProfile);
@@ -66,7 +92,7 @@ public class FileObjectService {
 
     public void savePicture(MultipartFile file, @RequestParam String text) {
         if (countPicturesForCurrentUser() < 10) {
-            try {            
+            try {
                 FileObject fo = new FileObject();
 
                 fo.setFilename(file.getOriginalFilename());
@@ -135,23 +161,23 @@ public class FileObjectService {
         }
         return false;
     }
-    
+
     public void deleteCommentsForPicture(Long picid) {
         FileObject fileObject = fileObjectRepository.getOne(picid);
         List<FileObjectComment> fileObjectComments = fileObjectCommentRepository.findByFileobject(fileObject);
-        for (FileObjectComment fileObjectComment :  fileObjectComments) {
+        for (FileObjectComment fileObjectComment : fileObjectComments) {
             fileObjectCommentRepository.delete(fileObjectComment);
         }
     }
-    
+
     public void deleteLikesForPicture(Long picid) {
         FileObject fileObject = fileObjectRepository.getOne(picid);
         List<FileObjectLike> fileObjectLikes = fileObjectLikeRepository.findByFileObject(fileObject);
-        for (FileObjectLike fileObjectLike :  fileObjectLikes) {
+        for (FileObjectLike fileObjectLike : fileObjectLikes) {
             fileObjectLikeRepository.delete(fileObjectLike);
         }
     }
-    
+
     public boolean pictureReallyExists(Long picid) {
         FileObject fileObject = fileObjectRepository.getOne(picid);
         if (fileObject != null) {

@@ -36,7 +36,7 @@ public class AccountControllerTest extends org.fluentlenium.adapter.junit.Fluent
         find("#username").fill().with("rolle");
         find("#password").fill().with("xxxxxxxxxx");
         
-        find("button").first().submit();
+        find("form").first().submit();
         
         assertTrue(pageSource().contains("Rolle Rol - relaa"));
         assertTrue(pageSource().contains("Etsi syöttämällä kokonaan tai osa haettavasta nimestä."));

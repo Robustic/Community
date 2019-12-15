@@ -21,7 +21,7 @@ public class DefaultController {
 
     @GetMapping("*")
     public String start(Model model) {
-        initializeDatabase.setToDataBase();
+//        initializeDatabase.setToDataBase();
         if (accountService.checkIfLoggedIn()) {
             return "redirect:/profiles";
         }

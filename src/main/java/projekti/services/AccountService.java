@@ -39,12 +39,12 @@ public class AccountService {
     public void createNewAccount(String username, String password, String name, String alias, RedirectAttributes redirectAttributes) {
         boolean success = true;
         
-        if (username.length() < 1 || password.length() < 1 || name.length() < 1 || alias.length() < 1) {
-            if (username.length() < 1) {
+        if (username.length() < 4 || password.length() < 10 || name.length() < 1 || alias.length() < 1) {
+            if (username.length() < 4) {
                 redirectAttributes.addFlashAttribute("messageusername", "Käyttäjätunnuksen täytyy olla vähintään 4 merkkiä pitkä.");
                 redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
             }
-            if (password.length() < 1) {
+            if (password.length() < 10) {
                 redirectAttributes.addFlashAttribute("messagepassword", "Salasanan täytyy olla vähintään 10 merkkiä pitkä.");
                 redirectAttributes.addFlashAttribute("alertClass", "alert-danger");
             }

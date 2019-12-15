@@ -45,11 +45,23 @@ public class FileObjectService {
 
     @Autowired
     private FollowingRepository followingRepository;
+    
+    @Autowired
+    Environment enviroment;
 
     public void readDefaultFile() {
-        FileObject fileObject = fileObjectRepository.findByProfileIsNullAndFilename("default.png");        
+        FileObject fileObject = fileObjectRepository.findByProfileIsNullAndFilename("default.png");
         if (fileObject == null) {
-            String filename = "default.png";
+//            String filename = "default.png";
+            String filename = "";
+            String[] profiles = enviroment.getActiveProfiles();            
+            if (profiles.length > 0 && profiles[0].equals("application")) {
+                filename = "default.png";
+            } else if (profiles.length > 0 && profiles[0].equals("application-test")) {
+                filename = "default.png";
+            } else if (profiles.length > 0 && profiles[0].equals("application-production")) {
+                filename = "src/main/resources/default.png";
+            }
             Long size = 1693L;
             String contentType = "image/png";
             String description = "default";
@@ -59,7 +71,7 @@ public class FileObjectService {
                 fo.setContentType(contentType);
                 fo.setContentLength(size);
                 fo.setDescription(description);
-                
+
                 Path path = Paths.get(getClass().getClassLoader().getResource(filename).toURI());
                 fo.setContent(Files.readAllBytes(path));
                 fileObjectRepository.save(fo);

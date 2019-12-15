@@ -30,12 +30,13 @@ public class DevelopmentSecurityConfiguration extends WebSecurityConfigurerAdapt
         http.csrf().disable();
         // sallitaan framejen käyttö
         http.headers().frameOptions().sameOrigin();
+        
+//                .antMatchers("/defaultfiles").permitAll()
+//                .antMatchers("/defaultfiles/defaultpicture").permitAll()
 
         http.authorizeRequests()
                 .antMatchers("/").permitAll()
                 .antMatchers("/createnewaccount").permitAll()
-//                .antMatchers("/defaultfiles").permitAll()
-//                .antMatchers("/defaultfiles/defaultpicture").permitAll()
                 .antMatchers("/h2-console","/h2-console/**").permitAll()
                 .anyRequest().authenticated();
         http.formLogin().permitAll().and()

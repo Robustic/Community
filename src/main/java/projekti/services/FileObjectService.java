@@ -24,71 +24,82 @@ import projekti.repositories.FollowingRepository;
 
 @Service
 public class FileObjectService {
-    
+
     @Autowired
     private FileObjectRepository fileObjectRepository;
-    
+
     @Autowired
     private FileObjectCommentRepository fileObjectCommentRepository;
-    
+
     @Autowired
     private FileObjectLikeRepository fileObjectLikeRepository;
-    
+
     @Autowired
     private ProfileService profileService;
-    
+
+    @Autowired
+    private ProfilePictureService profilePictureService;
+
     @Autowired
     private FollowingRepository followingRepository;
-    
+
     public FileObject copyFileObjectForProfile(FileObject fileObject, Profile profile) {
         FileObject newFileObject = new FileObject();
-        
+
         newFileObject.setFilename(fileObject.getFilename());
         newFileObject.setContentType(fileObject.getContentType());
         newFileObject.setContentLength(fileObject.getContentLength());
         newFileObject.setLocalDateTime(LocalDateTime.now());
-        
+
         newFileObject.setDescription(fileObject.getDescription());
         newFileObject.setProfile(profile);
         newFileObject.setContent(fileObject.getContent());
-        
+
         return newFileObject;
     }
     
+    public int countPicturesForCurrentUser() {
+        Profile currentProfile = profileService.findProfileForCurrentUser();
+        List<FileObject> fileObjects = fileObjectRepository.findByProfile(currentProfile);
+        return fileObjects.size();
+    }
+
     public void savePicture(MultipartFile file, @RequestParam String text) {
-        try {
-            FileObject fo = new FileObject();
+        if (countPicturesForCurrentUser() < 10) {
+            try {            
+                FileObject fo = new FileObject();
 
-            fo.setFilename(file.getOriginalFilename());
-            fo.setContentType(file.getContentType());
-            fo.setContentLength(file.getSize());
-            fo.setLocalDateTime(LocalDateTime.now());
-            
-            fo.setDescription(text);
-            fo.setProfile(profileService.findProfileForCurrentUser());
-            
-            fo.setContent(file.getBytes());
+                fo.setFilename(file.getOriginalFilename());
+                fo.setContentType(file.getContentType());
+                fo.setContentLength(file.getSize());
+                fo.setLocalDateTime(LocalDateTime.now());
 
-            fileObjectRepository.save(fo);
-        } catch (IOException e) {
-            System.out.println(e);
+                fo.setDescription(text);
+                fo.setProfile(profileService.findProfileForCurrentUser());
+
+                fo.setContent(file.getBytes());
+
+                fileObjectRepository.save(fo);
+            } catch (IOException e) {
+                System.out.println(e);
+            }
         }
     }
-    
+
     public void getMyPictures(Model model) {
         Profile profileUsedNow = profileService.findProfileForCurrentUser();
-        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias());        
-        getPicturesWithAlias(model, profileUsedNow.getAlias()); 
+        model.addAttribute("profileheader", profileUsedNow.getName() + " - " + profileUsedNow.getAlias());
+        getPicturesWithAlias(model, profileUsedNow.getAlias());
     }
-    
+
     public void addLikeToFileObject(String profileAlias, Long id) {
-        FileObject fileObject = fileObjectRepository.getOne(id);   
+        FileObject fileObject = fileObjectRepository.getOne(id);
         FileObjectLike fileObjectLike = new FileObjectLike();
         fileObjectLike.setFileObject(fileObject);
         fileObjectLike.setProfile(profileService.findProfileForCurrentUser());
         fileObjectLikeRepository.save(fileObjectLike);
     }
-    
+
     public void getPicturesWithAlias(Model model, String alias) {
         Profile profile = profileService.getProfileByAlias(alias);
         Profile profileUsedNow = profileService.findProfileForCurrentUser();
@@ -99,21 +110,70 @@ public class FileObjectService {
         }
         profiles.add(profile);
         Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
-        model.addAttribute("pictures", fileObjectRepository.findByProfileIn(profiles, pageable)); 
+        model.addAttribute("pictures", fileObjectRepository.findByProfileIn(profiles, pageable));
         List<FileObject> fileObjects = new ArrayList<>();
         for (FileObjectLike fileObjectLike : fileObjectLikeRepository.findByProfile(profileUsedNow)) {
             fileObjects.add(fileObjectLike.getFileObject());
         }
         model.addAttribute("picturesforpersonlikes", fileObjects);
     }
-        
+
     public void addCommentToFileObject(String profileAlias, Long id, String comment) {
-        FileObject fileObject = fileObjectRepository.getOne(id);   
+        FileObject fileObject = fileObjectRepository.getOne(id);
         FileObjectComment fileObjectComment = new FileObjectComment();
         fileObjectComment.setComment(comment);
         fileObjectComment.setFileobject(fileObject);
         fileObjectComment.setProfile(profileService.findProfileForCurrentUser());
         fileObjectComment.setLocalDateTime(LocalDateTime.now());
-        fileObjectCommentRepository.save(fileObjectComment);        
+        fileObjectCommentRepository.save(fileObjectComment);
+    }
+
+    public boolean isPictureCurrentUserPicture(Long picid) {
+        Profile currentProfile = profileService.findProfileForCurrentUser();
+        if (fileObjectRepository.getOne(picid).getProfile() == currentProfile) {
+            return true;
+        }
+        return false;
+    }
+    
+    public void deleteCommentsForPicture(Long picid) {
+        FileObject fileObject = fileObjectRepository.getOne(picid);
+        List<FileObjectComment> fileObjectComments = fileObjectCommentRepository.findByFileobject(fileObject);
+        for (FileObjectComment fileObjectComment :  fileObjectComments) {
+            fileObjectCommentRepository.delete(fileObjectComment);
+        }
+    }
+    
+    public void deleteLikesForPicture(Long picid) {
+        FileObject fileObject = fileObjectRepository.getOne(picid);
+        List<FileObjectLike> fileObjectLikes = fileObjectLikeRepository.findByFileObject(fileObject);
+        for (FileObjectLike fileObjectLike :  fileObjectLikes) {
+            fileObjectLikeRepository.delete(fileObjectLike);
+        }
+    }
+    
+    public boolean pictureReallyExists(Long picid) {
+        FileObject fileObject = fileObjectRepository.getOne(picid);
+        if (fileObject != null) {
+            return true;
+        }
+        return false;
+    }
+
+    public void deletePictureReally(Long picid) {
+        if (pictureReallyExists(picid) == false) {
+            return;
+        }
+        if (isPictureCurrentUserPicture(picid) == false) {
+            return;
+        }
+        FileObject profilePictureFileObject = profilePictureService.getProfilePictureFileObject();
+        if (profilePictureFileObject.getId() == picid) {
+            profilePictureService.deleteProfilePicture();
+        }
+        deleteCommentsForPicture(picid);
+        deleteLikesForPicture(picid);
+        FileObject fileObject = fileObjectRepository.getOne(picid);
+        fileObjectRepository.delete(fileObject);
     }
 }

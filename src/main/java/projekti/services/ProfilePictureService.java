@@ -43,4 +43,18 @@ public class ProfilePictureService {
         newProfilePicture.setFileobject(fileObject);
         profilePictureRepository.save(newProfilePicture);
     }
+    
+    public FileObject getProfilePictureFileObject() {
+        Profile currentProfile = profileService.findProfileForCurrentUser();
+        return profilePictureRepository.findByProfile(currentProfile).getFileobject();
+    }
+    
+    public void deleteProfilePicture() {
+        Profile currentProfile = profileService.findProfileForCurrentUser();
+        ProfilePicture profilePicture = profilePictureRepository.findByProfile(currentProfile);        
+        if (profilePicture != null) {
+            profilePictureRepository.delete(profilePicture);
+        }
+        setDefaultProfilePictureForProfile(currentProfile);
+    }
 }

@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.entities.FileObject;
 import projekti.entities.Profile;
 import projekti.repositories.FileObjectRepository;
@@ -45,50 +46,33 @@ public class MyPicturesController {
     }    
     
     @Autowired
-    private FileObjectRepository fileObjectRepository;
-    
-//    @GetMapping("/files/{filename}")
-//    public ResponseEntity<byte[]> viewFile(@PathVariable String filename) {
-//        FileObject fileObject = fileObjectRepository.findByFilename(filename);
-//
-//        final HttpHeaders headers = new HttpHeaders();
-//        headers.setContentType(MediaType.parseMediaType(fileObject.getContentType()));
-//        headers.setContentLength(fileObject.getContentLength());
-//        headers.add("Content-Disposition", "attachment; filename=" + fileObject.getFilename());
-//
-//        return new ResponseEntity<>(fileObject.getContent(), headers, HttpStatus.CREATED);
-//    }
-    //           /profilespictures/mickey/pictures/mikki.gif"
-//    @GetMapping("/profilespictures/{profilealias}/pictures/{picture}")
-//    public ResponseEntity<byte[]> viewFile(@PathVariable String profileAlias, @PathVariable String picture) {
-//        System.out.println("profileAlias:" + profileAlias);
-//        System.out.println("picture:" + picture);
-//        Profile profile = profileService.getProfileByAlias(profileAlias);
-//        FileObject fileObject = fileObjectRepository.findByFilenameAndProfile(picture, profile);
-//        System.out.println("*************Löytyi:" + fileObject.getFilename());
-//        if (fileObject != null) {
-//            final HttpHeaders headers = new HttpHeaders();
-//            headers.setContentType(MediaType.parseMediaType(fileObject.getContentType()));
-//            headers.setContentLength(fileObject.getContentLength());
-//            headers.add("Content-Disposition", "attachment; filename=" + fileObject.getFilename());
-//            return new ResponseEntity<>(fileObject.getContent(), headers, HttpStatus.CREATED);
-//        } else {
-//            System.out.println("Ei loydy");
-//            return null;
-//        }
-//    }    
+    private FileObjectRepository fileObjectRepository;  
     
     @PostMapping("/profiles/{alias}/setprofilepicture/{picid}")
-    public String setProjectPicture(@PathVariable String alias, @PathVariable Long picid,
+    public String setProfilePicture(@PathVariable String alias, @PathVariable Long picid,
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
         profilePictureService.setProfilePicture(picid);
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }
     
+    @PostMapping("/profiles/{alias}/deletepicture/{picid}")
+    public String deletePicture(@PathVariable String alias, @PathVariable Long picid,
+            @RequestParam String redirect, @RequestParam String aliastoredirect, RedirectAttributes redirectAttributes) {
+        redirectAttributes.addFlashAttribute("deletepicture", "Haluatko varmasti poistaa tämän kuvan?");
+        redirectAttributes.addFlashAttribute("deletepictureAlertClass", "alert-danger");
+        redirectAttributes.addFlashAttribute("deletepictureid", picid);
+        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
+    }
+    
+    @PostMapping("/profiles/{alias}/deletepicturereally/{picid}")
+    public String deletePictureReally(@PathVariable String alias, @PathVariable Long picid,
+            @RequestParam String redirect, @RequestParam String aliastoredirect) {
+        fileObjectService.deletePictureReally(picid);
+        return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
+    }
+    
     @GetMapping("/profiles/{alias}/pictures/{picture}")
     public ResponseEntity<byte[]> viewFile(@PathVariable String alias, @PathVariable String picture) {
-        System.out.println("profileAlias:" + alias);
-        System.out.println("picture:" + picture);
         Profile profile = profileService.getProfileByAlias(alias);        
         FileObject fileObject = fileObjectRepository.findByFilenameAndProfile(picture, profile);
         if (fileObject == null) {
@@ -104,7 +88,6 @@ public class MyPicturesController {
     @PostMapping("/profiles/{alias}/commentpicture/{id}")
     public String addCommentToMessage(@PathVariable String alias, @PathVariable Long id, @RequestParam String comment, 
             @RequestParam String redirect, @RequestParam String aliastoredirect) {
-        System.out.println("***********addCommentToMessage funkakrissa");
         fileObjectService.addCommentToFileObject(alias, id, comment);
         return "redirect:" + profileService.redirectWithParameters(redirect, aliastoredirect);
     }

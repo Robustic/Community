@@ -70,7 +70,24 @@
                                         <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
                                         <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
                                         <input type="submit" class="btn btn-info" value="Aseta profiilikuvaksi"/>
-                                    </form>   
+                                    </form>
+                                    <div th:unless="${deletepicture}">
+                                        <form method="POST" th:action="@{/profiles/{alias}/deletepicture/{picid}(alias=${picture.profile.alias}, picid=${picture.id})}">
+                                            <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                            <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
+                                            <input type="submit" class="btn btn-warning" value="Poista kuva"/>
+                                        </form>
+                                    </div>
+                                    <div th:if="${deletepicture}">
+                                        <div th:if="${deletepictureid == picture.id}">
+                                            <div th:text="${deletepicture}" th:class="${'alert ' + deletepictureAlertClass}"/>
+                                            <form method="POST" th:action="@{/profiles/{alias}/deletepicturereally/{picid}(alias=${picture.profile.alias}, picid=${picture.id})}">
+                                                <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                                <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
+                                                <input type="submit" class="btn btn-danger" value="Poista kuva lopullisesti"/>
+                                            </form>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                             <h6>

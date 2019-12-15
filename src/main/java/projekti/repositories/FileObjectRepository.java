@@ -12,5 +12,6 @@ public interface FileObjectRepository extends JpaRepository<FileObject, Long> {
     FileObject findByFilename(String filename);
     FileObject findByFilenameAndProfile(String filename, Profile profile);
     Page<FileObject> findByProfileIn(List<Profile> profiles, Pageable pageable);
+    List<FileObject> findByProfile(Profile profiles);
     FileObject findByProfileIsNullAndFilename(String filename);
 }

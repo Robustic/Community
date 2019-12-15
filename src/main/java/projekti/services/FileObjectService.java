@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.env.Environment;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -45,7 +46,7 @@ public class FileObjectService {
 
     @Autowired
     private FollowingRepository followingRepository;
-    
+
     @Autowired
     Environment enviroment;
 
@@ -54,13 +55,14 @@ public class FileObjectService {
         if (fileObject == null) {
 //            String filename = "default.png";
             String filename = "";
-            String[] profiles = enviroment.getActiveProfiles();            
-            if (profiles.length > 0 && profiles[0].equals("application")) {
-                filename = "default.png";
-            } else if (profiles.length > 0 && profiles[0].equals("application-test")) {
-                filename = "default.png";
-            } else if (profiles.length > 0 && profiles[0].equals("application-production")) {
-                filename = "src/main/resources/default.png";
+            String[] profiles = enviroment.getActiveProfiles();
+            filename = "default.png";
+            if (profiles.length > 0) {
+                if (profiles[0].equals("test")) {
+                    filename = "default.png";
+                } else {
+                    filename = "src/main/resources/default.png";
+                }
             }
             Long size = 1693L;
             String contentType = "image/png";

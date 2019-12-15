@@ -29,6 +29,7 @@ public class AccountController {
     @Autowired
     FileObjectService fileObjectService;
 
+    @Transactional
     @GetMapping("/createnewaccount")
     public String index(Model model) {
         // fileObjectService.readDefaultFile();

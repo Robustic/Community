@@ -1,5 +1,6 @@
 package projekti.controllers;
 
+import javax.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -18,6 +19,7 @@ public class ProfilesController {
     @Autowired
     private ProfileService profileService;
 
+    @Transactional
     @GetMapping("/profiles")
     public String find(Model model, @ModelAttribute("oldTextToFind") String oldTextToFind) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
@@ -30,6 +32,7 @@ public class ProfilesController {
         return "profiles";
     }
 
+    @Transactional
     @PostMapping("/profiles")
     public String findtext(@RequestParam String findtext, RedirectAttributes redirectAttributes) {
         if (findtext != null) {

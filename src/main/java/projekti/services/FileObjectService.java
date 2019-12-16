@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.env.Environment;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -148,13 +149,21 @@ public class FileObjectService {
             profiles.add(following.getFollowed());
         }
         profiles.add(profile);
-        Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
-        model.addAttribute("pictures", fileObjectRepository.findByProfileIn(profiles, pageable));
-        List<FileObject> fileObjects = new ArrayList<>();
-        for (FileObjectLike fileObjectLike : fileObjectLikeRepository.findByProfile(profileUsedNow)) {
-            fileObjects.add(fileObjectLike.getFileObject());
+        Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());        
+        Page<FileObject> fileObjects = fileObjectRepository.findByProfileIn(profiles, pageable);
+        model.addAttribute("pictures", fileObjects);
+        
+        pageable = PageRequest.of(0, 10, Sort.by("localDateTime").descending());
+        for (FileObject fileObject : fileObjects) {
+            List<FileObjectComment> messageComments = fileObjectCommentRepository.findByFileobject(fileObject, pageable);
+            fileObject.setFileObjectComment(messageComments);
         }
-        model.addAttribute("picturesforpersonlikes", fileObjects);
+        
+        List<FileObject> fileObjectsForLikes = new ArrayList<>();
+        for (FileObjectLike fileObjectLike : fileObjectLikeRepository.findByProfile(profileUsedNow)) {
+            fileObjectsForLikes.add(fileObjectLike.getFileObject());
+        }
+        model.addAttribute("picturesforpersonlikes", fileObjectsForLikes);
     }
 
     public void addCommentToFileObject(String profileAlias, Long id, String comment) {

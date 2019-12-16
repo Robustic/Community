@@ -4,6 +4,7 @@ import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -89,11 +90,19 @@ public class MessageService {
         }
         profiles.add(profile);
         Pageable pageable = PageRequest.of(0, 25, Sort.by("localDateTime").descending());
-        model.addAttribute("messages", messageRepository.findByProfileIn(profiles, pageable));
-        List<Message> messages = new ArrayList<>();
-        for (MessageLike messageLike : messageLikeRepository.findByProfile(profileUsedNow)) {
-            messages.add(messageLike.getMessage());
+        Page<Message> messages = messageRepository.findByProfileIn(profiles, pageable);
+        model.addAttribute("messages", messages);
+        
+        pageable = PageRequest.of(0, 10, Sort.by("localDateTime").descending());
+        for (Message message : messages) {
+            List<MessageComment> messageComments = messageCommentRepository.findByMessage(message, pageable);
+            message.setMessageComment(messageComments);
         }
-        model.addAttribute("messagesforpersonlikes", messages);
+        
+        List<Message> messagesForLikes = new ArrayList<>();
+        for (MessageLike messageLike : messageLikeRepository.findByProfile(profileUsedNow)) {
+            messagesForLikes.add(messageLike.getMessage());
+        }
+        model.addAttribute("messagesforpersonlikes", messagesForLikes);
     }
 }

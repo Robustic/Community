@@ -118,4 +118,14 @@ public class ProfileService {
         model.addAttribute("whoAreFollowingMe", followingRepository.findByFollowed(profileUsedNow));
         model.addAttribute("blockeds", blockedRepository.findByBlocker(profileUsedNow));    
     }
+    
+    public void getProfilesWhoIamFollowing(Model model) {
+        Profile currentProfile = findProfileForCurrentUser();
+        List<Following> follewed = currentProfile.getWhoIamFollowing();
+        List<Profile> follewedProfiles = new ArrayList<>();
+        for (Following following : follewed) {
+            follewedProfiles.add(following.getFollowed());
+        }
+        model.addAttribute("followedProfiles", follewedProfiles);
+    }
 }

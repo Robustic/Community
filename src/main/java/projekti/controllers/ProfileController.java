@@ -32,6 +32,7 @@ public class ProfileController {
     public String getWallContentWithAlias(Model model, @PathVariable String profileAlias) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
         model.addAttribute("showProfile", profileService.getProfileByAlias(profileAlias));
+        profileService.getProfilesWhoIamFollowing(model);
         profileService.getWallContentWithAlias(model, profileAlias);
         return "profile";
     }

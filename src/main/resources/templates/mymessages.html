@@ -33,7 +33,7 @@
                 </form>
                 <p></p>
                 <h3>Viestini</h3> 
-                <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, messagesforpersonlikes=${messagesforpersonlikes}, redirectvalue=mymessages, redirectcurrentprofile=${currentProfile})"></div>
+                <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, messagesforpersonlikes=${messagesforpersonlikes}, redirectvalue=mymessages, redirectcurrentprofile=${currentProfile}, followedProfiles=${followedProfiles})"></div>
             </section>
         </main>
     </body>

@@ -32,7 +32,7 @@
                 </form>
                 <p></p>
                 <h3>Kuvani</h3>
-                <div th:replace="fragments/layout :: picturesfragment(allpictures=${pictures}, picturesforpersonlikes=${picturesforpersonlikes}, redirectvalue=mypictures, redirectcurrentprofile=${currentProfile})"></div>
+                <div th:replace="fragments/layout :: picturesfragment(allpictures=${pictures}, picturesforpersonlikes=${picturesforpersonlikes}, redirectvalue=mypictures, redirectcurrentprofile=${currentProfile}, followedProfiles=${followedProfiles})"></div>
             </section>
         </main>
     </body>

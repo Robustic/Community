@@ -56,7 +56,7 @@
             </nav>
         </div>
         <div>TODO write content</div>
-        <div th:fragment="picturesfragment(allpictures, picturesforpersonlikes, redirectvalue, redirectcurrentprofile)">
+        <div th:fragment="picturesfragment(allpictures, picturesforpersonlikes, redirectvalue, redirectcurrentprofile, followedProfiles)">
             <div th:each="picture : ${allpictures}">
                 <div class="customborder">
                     <div class="media">
@@ -110,14 +110,16 @@
                                 <span th:text="${#lists.size(picture.fileObjectLike)}">likes</span>
                                 <a> tykkää tästä kuvasta</a>
                             </h6>
-                            <form method="POST" th:action="@{/profiles/{alias}/commentpicture/{id}(alias=${picture.profile.alias}, id=${picture.id})}">
-                                <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
-                                <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
-                                <div class="form-group">
-                                    <input type="text" name="comment" class="form-control" placeholder="Kommentoi kuvaa" id="comment"></input>
-                                </div>
-                                <input type="submit" class="btn btn-primary" value="Lähetä kommentti"/>
-                            </form>
+                            <div th:if="${#lists.contains(followedProfiles, picture.profile) OR #lists.contains(currentProfile, picture.profile)}">    
+                                <form method="POST" th:action="@{/profiles/{alias}/commentpicture/{id}(alias=${picture.profile.alias}, id=${picture.id})}">
+                                    <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                    <input type="hidden" name="aliastoredirect" th:value="${picture.profile.alias}"/>
+                                    <div class="form-group">
+                                        <input type="text" name="comment" class="form-control" placeholder="Kommentoi kuvaa" id="comment"></input>
+                                    </div>
+                                    <input type="submit" class="btn btn-primary" value="Lähetä kommentti"/>
+                                </form>
+                            </div>    
                             <div class="media mt-3" th:each="pictureCommentti : ${picture.fileObjectComment}">
                                 <a class="mr-3">
                                     <div class="thumbnail">
@@ -136,7 +138,7 @@
                 </div>
             </div>
         </div>
-        <div th:fragment="messagesfragment(allmessages, messagesforpersonlikes, redirectvalue, redirectcurrentprofile)">
+        <div th:fragment="messagesfragment(allmessages, messagesforpersonlikes, redirectvalue, redirectcurrentprofile, followedProfiles)">
             <div th:each="message : ${allmessages}">
                 <div class="customborder">
                     <div class="media">
@@ -162,16 +164,17 @@
                                 </div>
                                 <span th:text="${#lists.size(message.messageLike)}">likes</span>
                                 <a> tykkää tästä viestistä</a>
-                            </h6>                            
-                            <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comment(alias=${message.profile.alias}, id=${message.id})}">
-                                <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
-                                <input type="hidden" name="aliastoredirect" th:value="${message.profile.alias}"/>
-                                <div class="form-group">
-                                    <input type="text" name="comment" class="form-control" placeholder="Kirjoita kommentti" id="comment"></input>
-                                </div>
-                                <input type="submit" class="btn btn-primary" value="Lähetä uusi kommentti"/>
-                            </form>
-
+                            </h6>
+                            <div th:if="${#lists.contains(followedProfiles, message.profile) OR #lists.contains(currentProfile, message.profile)}">  
+                                <form method="POST" th:action="@{/profiles/{alias}/messages/{id}/comment(alias=${message.profile.alias}, id=${message.id})}">
+                                    <input type="hidden" name="redirect" th:value="${redirectvalue}"/>
+                                    <input type="hidden" name="aliastoredirect" th:value="${message.profile.alias}"/>
+                                    <div class="form-group">
+                                        <input type="text" name="comment" class="form-control" placeholder="Kirjoita kommentti" id="comment"></input>
+                                    </div>
+                                    <input type="submit" class="btn btn-primary" value="Lähetä uusi kommentti"/>
+                                </form>
+                            </div>
                             <div class="media mt-3" th:each="messageCommentti : ${message.messageComment}">
                                 <a class="mr-3">
                                     <div class="thumbnail">

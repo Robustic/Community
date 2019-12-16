@@ -23,6 +23,7 @@ public class MyMessagesController {
     public String getMyMessages(Model model) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
         model.addAttribute("showProfile", profileService.findProfileForCurrentUser());
+        profileService.getProfilesWhoIamFollowing(model);
         messageService.getMyMessages(model);
         return "mymessages";
     }

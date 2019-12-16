@@ -40,6 +40,7 @@ public class MyPicturesController {
     public String getMyPictures(Model model) {
         model.addAttribute("currentProfile", profileService.findProfileForCurrentUser());
         model.addAttribute("showProfile", profileService.findProfileForCurrentUser());
+        profileService.getProfilesWhoIamFollowing(model);
         fileObjectService.getMyPictures(model);
         return "mypictures";
     }

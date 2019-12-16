@@ -32,7 +32,7 @@ public class FileObject extends AbstractPersistable<Long> {
     @ManyToOne
     private Profile profile;
 
-    @Lob
+//    @Lob
     @Basic(fetch = FetchType.LAZY)
     private byte[] content;
     

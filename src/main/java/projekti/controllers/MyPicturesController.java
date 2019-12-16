@@ -47,8 +47,8 @@ public class MyPicturesController {
     
     @Transactional
     @PostMapping("/mypictures/picture")
-    public String savePicture(@RequestParam("file") MultipartFile file, @RequestParam String text) {
-        fileObjectService.savePicture(file, text);
+    public String savePicture(@RequestParam("file") MultipartFile file, @RequestParam String text, RedirectAttributes redirectAttributes) {
+        fileObjectService.savePicture(file, text, redirectAttributes);
         return "redirect:/mypictures";
     }    
         

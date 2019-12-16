@@ -17,6 +17,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import projekti.entities.FileObject;
 import projekti.entities.FileObjectComment;
 import projekti.entities.FileObjectLike;
@@ -104,7 +105,7 @@ public class FileObjectService {
         return fileObjects.size();
     }
 
-    public void savePicture(MultipartFile file, @RequestParam String text) {
+    public void savePicture(MultipartFile file, @RequestParam String text, RedirectAttributes redirectAttributes) {
         if (countPicturesForCurrentUser() < 10) {
             try {
                 FileObject fo = new FileObject();
@@ -120,9 +121,14 @@ public class FileObjectService {
                 fo.setContent(file.getBytes());
 
                 fileObjectRepository.save(fo);
+                redirectAttributes.addFlashAttribute("picturesaved", "Kuva " + file.getOriginalFilename() + " talletettu.");
+                redirectAttributes.addFlashAttribute("picturesavedClass", "alert-success");
             } catch (IOException e) {
                 System.out.println(e);
             }
+        } else {
+            redirectAttributes.addFlashAttribute("tenpicturesfull", "Olet jo tallentanut 10 kuvaa, kuvaa ei talletettu.");
+            redirectAttributes.addFlashAttribute("tenpicturesfullClass", "alert-danger");
         }
     }
 

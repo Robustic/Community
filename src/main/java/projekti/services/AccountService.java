@@ -37,7 +37,6 @@ public class AccountService {
     }
     
     public void createNewAccount(String username, String password, String name, String alias, RedirectAttributes redirectAttributes) {
-        boolean success = true;
         
         if (username.length() < 4 || password.length() < 10 || name.length() < 1 || alias.length() < 1) {
             if (username.length() < 4) {

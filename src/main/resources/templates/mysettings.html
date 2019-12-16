@@ -21,13 +21,7 @@
             </div>
         </header>
         <main>               
-            <section class="container">
-                <h3>Kuvani</h3> 
-                <form th:action="@{/mysettings/files}" method="POST" enctype="multipart/form-data">
-                    <input type="file" name="file"/>
-                    <input type="submit" class="btn btn-primary" value="Lähetä kuva"/>
-                </form>
-                
+            <section class="container">                
                 <h3>Ketä seuraan</h3>
                 <table class="table"> 
                     <div th:each="following : ${whoIamFollowing}">                                     
@@ -39,7 +33,7 @@
                                 <a th:href="@{/profiles/{alias}(alias=${following.followed.alias})}" th:text="${following.followed.alias}">alias</a>
                             </td>
                             <td>                        
-                                <a th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}">alias</a>
+                                <a>Seuraaminen aloitettu&nbsp;<span th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}">date</span></a>
                             </td>
                             <td>
                                 <form method="POST" th:action="@{/profiles/{profiletoleavefollowing}/leavefollowing(profiletoleavefollowing=${following.followed.alias})}">
@@ -64,7 +58,7 @@
                                 <a th:href="@{/profiles/{alias}(alias=${following.follower.alias})}" th:text="${following.follower.alias}">alias</a>
                             </td>
                             <td>                        
-                                <a th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}">alias</a>
+                                <a>Seuraaminen aloitettu&nbsp;<span th:text="${#temporals.format(following.localDateTime, 'dd-MM-yyyy HH:mm')}">date</span></a>
                             </td>
                             <td>
                                 <form method="POST" th:action="@{/mysettings/{setblock}/setblock(setblock=${following.follower.alias})}">
@@ -90,7 +84,7 @@
                                 <a th:href="@{/profiles/{alias}(alias=${oneBlocked.blocked.alias})}" th:text="${oneBlocked.blocked.alias}">alias</a>
                             </td>
                             <td>                        
-                                <a th:text="${#temporals.format(oneBlocked.localDateTime, 'dd-MM-yyyy HH:mm')}">alias</a>
+                                <a>Blokattu&nbsp;<span th:text="${#temporals.format(oneBlocked.localDateTime, 'dd-MM-yyyy HH:mm')}">date</span></a>
                             </td>
                             <td>
                                 <form method="POST" th:action="@{/mysettings/{removeblock}/removeblock(removeblock=${oneBlocked.blocked.alias})}">

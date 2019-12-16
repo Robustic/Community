@@ -31,8 +31,8 @@
                     </div>
                     <input type="submit" class="btn btn-primary" value="Lähetä uusi viesti"/>
                 </form>
-                <p></p>
-                <h3>Viestini</h3> 
+                <p></p> 
+                <h3>Viestit</h3>
                 <div th:replace="fragments/layout :: messagesfragment(allmessages=${messages}, messagesforpersonlikes=${messagesforpersonlikes}, redirectvalue=mymessages, redirectcurrentprofile=${currentProfile}, followedProfiles=${followedProfiles})"></div>
             </section>
         </main>

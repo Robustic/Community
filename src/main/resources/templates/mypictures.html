@@ -28,10 +28,12 @@
                     <div class="form-group">
                         <input type="text" name="text" class="form-control" placeholder="Kerro kuvasta" id="text"></input>
                     </div>
-                    <input type="submit" class="btn btn-primary" value="Lähetä kuva"/>
+                    <input type="submit" class="btn btn-primary" value="Lähetä uusi kuva"/>
                 </form>
+                <div th:if="${picturesaved}" th:text="${picturesaved}" th:class="${'alert ' + picturesavedClass}"/>
+                <div th:if="${tenpicturesfull}" th:text="${tenpicturesfull}" th:class="${'alert ' + tenpicturesfullClass}"/>
                 <p></p>
-                <h3>Kuvani</h3>
+                <h3>Kuvat</h3>
                 <div th:replace="fragments/layout :: picturesfragment(allpictures=${pictures}, picturesforpersonlikes=${picturesforpersonlikes}, redirectvalue=mypictures, redirectcurrentprofile=${currentProfile}, followedProfiles=${followedProfiles})"></div>
             </section>
         </main>

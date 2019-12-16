@@ -11,7 +11,9 @@ public interface ProfileRepository extends JpaRepository<Profile, Long> {
     Profile findByAccount(Account account);
     Profile findByAlias(String alias);
     List<Profile> findByNameContaining(String str);
-    Page<Profile> findByNameContaining(String lastname, Pageable pageable);
-    Page<Profile> findByNameContainingAndAliasNot(String lastname, String alias, Pageable pageable);
+    List<Profile> findByNameContainingIgnoreCase(String str);
+    Page<Profile> findByNameContaining(String string, Pageable pageable);
+    Page<Profile> findByNameContainingAndAliasNot(String string, String alias, Pageable pageable);
+    Page<Profile> findByNameContainingIgnoreCaseAndAliasNot(String string, String alias, Pageable pageable);
 }
 

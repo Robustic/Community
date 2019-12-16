@@ -95,7 +95,7 @@ public class ProfileService {
     public void findProfilesWithString(Model model, String textToFind) {        
         Profile currentProfile = findProfileForCurrentUser();
         Pageable pageable = PageRequest.of(0, 25, Sort.by("name").ascending());
-        model.addAttribute("findedProfiles", profileRepository.findByNameContainingAndAliasNot(textToFind, currentProfile.getAlias(), pageable));
+        model.addAttribute("findedProfiles", profileRepository.findByNameContainingIgnoreCaseAndAliasNot(textToFind, currentProfile.getAlias(), pageable));
         List<Following> follewed = currentProfile.getWhoIamFollowing();
         List<Profile> follewedProfiles = new ArrayList<>();
         for (Following following : follewed) {
@@ -107,7 +107,6 @@ public class ProfileService {
         for (Blocked blocked : blockeds) {
             blockerProfiles.add(blocked.getBlocker());
         }
-
         model.addAttribute("blockedMe", blockerProfiles);
     }
     

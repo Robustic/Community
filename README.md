@@ -1,9 +1,21 @@
 # Community
 [![CircleCI](https://circleci.com/gh/Robustic/Community.svg?style=svg)](https://circleci.com/gh/Robustic/Community)
+
 Communication application
 
 ## Use application in Heroku
 [Community app In Heroku](https://sheltered-oasis-48861.herokuapp.com)
+
+## Tutorial
+
+Push the link above. Application starts in the Heroku.
+Application start can take about 15 seconds, if application not used in the while.
+
+Register as a user and log in.
+
+When you are logged in, you can find other users with a name.
+
+You can start to follow other users, publish messages and pictures, and like other user messages and pictures. Start to find new connections. This is easy!
 
 ## Ohjeet Suomeksi
 

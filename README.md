@@ -1,4 +1,5 @@
 # Community
+[![CircleCI](https://circleci.com/gh/Robustic/Community.svg?style=svg)](https://circleci.com/gh/Robustic/Community)
 Communication application
 
 ## Use application in Heroku

@@ -1,3 +1,5 @@
 target/
 src/main/java/projekti/InitializeDatabase.java
 database.mv.db
+database.trace.db
+ohjeet.txt

@@ -110,6 +110,11 @@
                 <groupId>org.jacoco</groupId>
                 <artifactId>jacoco-maven-plugin</artifactId>
                 <version>0.8.2</version>
+                <configuration>
+                    <excludes>
+                        <exclude>**com.steadystate*</exclude>
+                    </excludes>
+                </configuration>
                 <executions>
                     <execution>
                         <goals>
@@ -124,7 +129,7 @@
                             <goal>report</goal>
                         </goals>
                     </execution>
-                </executions>
+                </executions>                
             </plugin>
         </plugins>
     </build>

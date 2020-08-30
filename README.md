@@ -6,6 +6,12 @@ Communication application
 ## Use application in Heroku
 [Community app In Heroku](https://sheltered-oasis-48861.herokuapp.com)
 
+Username and password for testing purposes:
+
+- username: esimerkkitunnus
+
+- password: abcdefghij
+
 ## Tutorial
 
 Push the link above. Application starts in the Heroku.
